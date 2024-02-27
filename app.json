@@ -1,4 +1,7 @@
 {
   "name": "tabletApp",
-  "displayName": "tabletApp"
+  "displayName": "tabletApp",
+  "ios": {
+    "supportsTablet": true
+  }
 }

@@ -1,8 +1,14 @@
 // LoginForm.tsx
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import colors from '../../../../colors'; 
-import { useNavigation } from '@react-navigation/native';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
+import colors from '../../../../colors';
+import {useNavigation} from '@react-navigation/native';
 
 const LoginForm = () => {
   const [username, setUsername] = useState('');
@@ -18,20 +24,21 @@ const LoginForm = () => {
     }
 
     // Replace with your actual API call
-    const response = await fetch('/api/login', {
-      method: 'POST',
-      body: JSON.stringify({ username, password }),
-    });
+    // const response = await fetch('/api/login', {
+    //   method: 'POST',
+    //   body: JSON.stringify({ username, password }),
+    // });
 
-    if (response.ok) {
-      const data = await response.json();
-      // Handle successful login
-      setError('');
-    //   onSuccessfulLogin(); // Invoke the callback for successful login
-    } else {
-      // Handle login failure (e.g., display error message)
-      setError('Invalid username or password. Please try again.');
-    }
+    // if (response.ok) {
+    //   const data = await response.json();
+    //   // Handle successful login
+    //   setError('');
+    // //   onSuccessfulLogin(); // Invoke the callback for successful login
+    // } else {
+    //   // Handle login failure (e.g., display error message)
+    //   setError('Invalid username or password. Please try again.');
+    // }
+    navigation.navigate('Home'); // Use the name of your home page screen
   };
 
   const handleForgotPassword = () => {
@@ -46,20 +53,22 @@ const LoginForm = () => {
         <TextInput
           placeholder="Username"
           value={username}
-          onChangeText={(text) => setUsername(text)}
+          onChangeText={text => setUsername(text)}
           style={styles.input}
         />
         <TextInput
           placeholder="Password"
           value={password}
-          onChangeText={(text) => setPassword(text)}
+          onChangeText={text => setPassword(text)}
           secureTextEntry
           style={styles.input}
         />
         <TouchableOpacity onPress={handleSubmit} style={styles.button}>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={handleForgotPassword} style={styles.forgotPasswordLink}>
+        <TouchableOpacity
+          onPress={handleForgotPassword}
+          style={styles.forgotPasswordLink}>
           <Text>Forgot Password?</Text>
         </TouchableOpacity>
       </View>
@@ -112,5 +121,3 @@ const styles = StyleSheet.create({
 });
 
 export default LoginForm;
-
-
