@@ -1,4 +1,14 @@
 import React, {useState, useEffect} from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  Modal,
+  TouchableOpacity,
+  StyleSheet,
+  Button,
+} from 'react-native';
+import colors from '../../../../../../colors';
 
 interface Patient {
   id: number;
@@ -23,117 +33,128 @@ const EditPatientModal: React.FC<Props> = ({
   onSubmit,
 }) => {
   const [editedPatient, setEditedPatient] = useState<Patient>(patient);
+
   useEffect(() => {
     setEditedPatient(patient);
   }, [patient]);
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, value} = e.target;
+
+  const handleInputChange = (name: keyof Patient, value: string) => {
     setEditedPatient(prevState => ({
       ...prevState,
       [name]: value,
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     onSubmit(editedPatient);
   };
 
   return (
-    <>
-      {isOpen && (
-        <div className="fixed z-10 inset-0 overflow-y-auto">
-          <div className="flex items-center justify-center min-h-screen">
-            <div
-              className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-              aria-hidden="true"
-              onClick={onClose}></div>
-            <div className="relative bg-white rounded-lg p-8 w-3/4">
-              <h1 className="w-full px-2 font-extrabold text-2xl mb-6">
-                Edit Details for {editedPatient.patient_id}
-              </h1>
-              <form onSubmit={handleSubmit}>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="px-2 flex items-center">
-                    <label
-                      htmlFor="patient_id"
-                      className="text-text01 font-bold mr-2">
-                      Patient ID:
-                    </label>
-                    <input
-                      type="text"
-                      id="patient_id"
-                      name="patient_id"
-                      value={editedPatient.patient_id}
-                      onChange={handleInputChange}
-                      className="border border-overlay01 rounded-lg focus:outline-overlay01 px-2 py-1"
-                    />
-                  </div>
-                  <div className="px-2 flex items-center">
-                    <label
-                      htmlFor="name"
-                      className="text-text01 font-bold mr-2">
-                      Name:
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={editedPatient.name}
-                      onChange={handleInputChange}
-                      className="border border-overlay01 rounded-lg focus:outline-overlay01 px-2 py-1"
-                    />
-                  </div>
-                  <div className="px-2 flex items-center">
-                    <label htmlFor="age" className="text-text01 font-bold mr-2">
-                      Age:
-                    </label>
-                    <input
-                      type="number"
-                      id="age"
-                      name="age"
-                      value={editedPatient.age.toString()}
-                      onChange={handleInputChange}
-                      className="border border-overlay01 rounded-lg focus:outline-overlay01 px-2 py-1"
-                    />
-                  </div>
-                  <div className="px-2 flex items-center">
-                    <label
-                      htmlFor="gender"
-                      className="text-text01 font-bold mr-2">
-                      Gender:
-                    </label>
-                    <input
-                      type="text"
-                      id="gender"
-                      name="gender"
-                      value={editedPatient.gender}
-                      onChange={handleInputChange}
-                      className="border border-overlay01 rounded-lg focus:outline-overlay01 px-2 py-1"
-                    />
-                  </div>
-                  {/* Add more fields here */}
-                </div>
-                <div className="mt-4 flex justify-end">
-                  <button
-                    type="submit"
-                    className="bg-interactive01 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none">
-                    Submit
-                  </button>
-                  <button
-                    type="button"
-                    className="bg-decorative01 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-300 focus:outline-none ml-2"
-                    onClick={onClose}>
-                    Cancel
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
+    <Modal visible={isOpen} transparent animationType="slide">
+      <View style={styles.modalOverlay}>
+        <View style={styles.modalContent}>
+          <Text style={styles.modalTitle}>
+            Edit Details for {editedPatient.patient_id}
+          </Text>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Patient ID:</Text>
+            <TextInput
+              style={styles.input}
+              value={editedPatient.patient_id}
+              onChangeText={value => handleInputChange('patient_id', value)}
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Name:</Text>
+            <TextInput
+              style={styles.input}
+              value={editedPatient.name}
+              onChangeText={value => handleInputChange('name', value)}
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Age:</Text>
+            <TextInput
+              style={styles.input}
+              value={editedPatient.age.toString()}
+              onChangeText={value => handleInputChange('age', value)}
+              keyboardType="numeric"
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Gender:</Text>
+            <TextInput
+              style={styles.input}
+              value={editedPatient.gender}
+              onChangeText={value => handleInputChange('gender', value)}
+            />
+          </View>
+          {/* Add more fields here */}
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={[styles.button, {backgroundColor: colors.interactive01}]}
+              onPress={handleSubmit}>
+              <Text style={styles.buttonText}>Submit</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.button, {backgroundColor: colors.decorative01}]}
+              onPress={onClose}>
+              <Text style={styles.buttonText}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Modal>
   );
 };
+
+const styles = StyleSheet.create({
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 16,
+    borderRadius: 8,
+    width: '80%',
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 16,
+  },
+  inputContainer: {
+    marginBottom: 16,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: colors.overlay01,
+    borderRadius: 8,
+    padding: 8,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginTop: 16,
+  },
+  button: {
+    backgroundColor: colors.interactive01,
+    padding: 10,
+    borderRadius: 8,
+    marginLeft: 8,
+  },
+  buttonText: {
+    color: 'white',
+    textAlign: 'center',
+  },
+});
 
 export default EditPatientModal;

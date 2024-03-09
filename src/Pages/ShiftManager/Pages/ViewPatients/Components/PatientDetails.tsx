@@ -1,5 +1,7 @@
 import React from 'react';
-import {View, Text, Modal, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
+import Modal from 'react-native-modal';
+import colors from '../../../../../../colors';
 
 interface PatientDetailsProps {
   patient: Patient;
@@ -22,33 +24,39 @@ const PatientDetails: React.FC<PatientDetailsProps> = ({
   onClose,
 }) => {
   return (
-    <Modal visible={isOpen} animationType="slide" transparent>
+    <Modal isVisible={isOpen} backdropOpacity={0.7}>
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <View
           style={{
-            backgroundColor: 'white',
+            backgroundColor: colors.ui02,
             padding: 16,
             borderRadius: 8,
             width: '80%',
           }}>
-          <Text style={{fontWeight: 'bold', fontSize: 20, marginBottom: 16}}>
+          <Text
+            style={{
+              color: colors.text01,
+              fontWeight: 'bold',
+              fontSize: 20,
+              marginBottom: 16,
+            }}>
             Patient Details for {patient.patient_id}
           </Text>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text>Patient ID:</Text>
-            <Text>{patient.patient_id}</Text>
+            <Text style={{color: colors.text01}}>Patient ID:</Text>
+            <Text style={{color: colors.text02}}>{patient.patient_id}</Text>
           </View>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text>Name:</Text>
-            <Text>{patient.name}</Text>
+            <Text style={{color: colors.text01}}>Name:</Text>
+            <Text style={{color: colors.text02}}>{patient.name}</Text>
           </View>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text>Age:</Text>
-            <Text>{patient.age}</Text>
+            <Text style={{color: colors.text01}}>Age:</Text>
+            <Text style={{color: colors.text02}}>{patient.age}</Text>
           </View>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text>Gender:</Text>
-            <Text>{patient.gender}</Text>
+            <Text style={{color: colors.text01}}>Gender:</Text>
+            <Text style={{color: colors.text02}}>{patient.gender}</Text>
           </View>
           <TouchableOpacity
             onPress={onClose}

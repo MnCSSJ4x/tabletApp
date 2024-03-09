@@ -1,21 +1,22 @@
 import React from 'react';
-import {View, Text, ScrollView} from 'react-native';
+import {View, Text, ScrollView, StyleSheet} from 'react-native';
 import Title from './Components/Title';
 import Records from './Components/Records';
+import Navbar from './Components/Navbar';
 
 const ViewPatients = () => {
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 20,
-      }}>
+    <View style={styles.container}>
+      <Navbar></Navbar>
       <Title title="All Patients" />
       <Records />
     </View>
   );
 };
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
 export default ViewPatients;

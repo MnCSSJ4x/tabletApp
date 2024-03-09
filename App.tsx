@@ -4,8 +4,8 @@ import React from 'react';
 import LoginPage from './src/Pages/Login/LoginPage';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import HomePage from './src/Pages/Home/HomePage';
 import ViewPatients from './src/Pages/ShiftManager/Pages/ViewPatients/ViewPatients';
+import HomePage from './src/Pages/Home/HomePage';
 
 const Stack = createStackNavigator();
 const App = () => {
@@ -13,7 +13,7 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name="LoginPage"
+          name="Login"
           component={LoginPage}
           options={{headerShown: false}}
         />

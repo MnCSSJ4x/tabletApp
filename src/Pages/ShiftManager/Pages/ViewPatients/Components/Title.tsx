@@ -1,7 +1,7 @@
 // Title.tsx
 import React from 'react';
 import {View, Text} from 'react-native';
-import {globalStyles} from '../../../../Home/styles';
+import {globalStyles} from '../../../../styles';
 
 interface TitleProps {
   title: string;

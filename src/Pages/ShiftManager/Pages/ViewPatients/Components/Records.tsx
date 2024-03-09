@@ -152,24 +152,24 @@ const Records = () => {
     console.log(`Viewing details of patient with ID: ${id}`);
   };
 
-  const handleEdit = (id: Patient) => {
-    setPatientEdit(true);
-    setPatient(id);
-    console.log(`Editing details of patient with ID: ${id}`);
-  };
+  // const handleEdit = (id: Patient) => {
+  //   setPatientEdit(true);
+  //   setPatient(id);
+  //   console.log(`Editing details of patient with ID: ${id}`);
+  // };
 
-  const handleEditSubmit = (updatedPatient: Patient) => {
-    console.log(updatedPatient);
-    setPatientEdit(false);
-  };
+  // const handleEditSubmit = (updatedPatient: Patient) => {
+  //   console.log(updatedPatient);
+  //   setPatientEdit(false);
+  // };
 
-  const handleDelete = (id: Patient) => {
-    console.log(`Deleting patient with ID: ${id}`);
-  };
+  // const handleDelete = (id: Patient) => {
+  //   console.log(`Deleting patient with ID: ${id}`);
+  // };
 
-  const handleTransfer = (id: Patient) => {
-    console.log(`Transferring patient with ID: ${id}`);
-  };
+  // const handleTransfer = (id: Patient) => {
+  //   console.log(`Transferring patient with ID: ${id}`);
+  // };
 
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
@@ -198,8 +198,10 @@ const Records = () => {
           <View key={record.id} style={styles.recordContainer}>
             <Text style={styles.recordTitle}>{record.name}</Text>
             <View style={styles.recordDetails}>
-              <Text>Age: {record.age}</Text>
-              <Text>Gender: {record.gender}</Text>
+              <Text style={{color: colors.text02}}>Age: {record.age}</Text>
+              <Text style={{color: colors.text02}}>
+                Gender: {record.gender}
+              </Text>
             </View>
             <View style={styles.buttonContainer}>
               <TouchableOpacity
@@ -207,7 +209,7 @@ const Records = () => {
                 onPress={() => handleView(record)}>
                 <Text style={styles.buttonText}>View</Text>
               </TouchableOpacity>
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={styles.editButton}
                 onPress={() => handleEdit(record)}>
                 <Text style={styles.buttonText}>Edit</Text>
@@ -221,7 +223,7 @@ const Records = () => {
                 style={styles.deleteButton}
                 onPress={() => handleDelete(record)}>
                 <Text style={styles.buttonText}>Delete</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
           </View>
         ))}
@@ -235,14 +237,14 @@ const Records = () => {
             onClose={() => setPatientDetails(false)}
           />
         )}
-        {patientSelected && (
+        {/* {patientSelected && (
           <EditPatientModal
             patient={patientSelected}
             isOpen={isPatientEditOpen}
             onClose={() => setPatientEdit(false)}
             onSubmit={updatedPatient => handleEditSubmit(updatedPatient)}
           />
-        )}
+        )} */}
       </View>
     </View>
   );
@@ -251,7 +253,7 @@ const Records = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    padding: 48,
     backgroundColor: colors.uiBackground,
   },
   searchInput: {
@@ -270,6 +272,8 @@ const styles = StyleSheet.create({
   },
   recordContainer: {
     backgroundColor: colors.ui02,
+    borderColor: colors.ui03,
+    borderWidth: 1,
     padding: 16,
     borderRadius: 8,
     marginBottom: 16,
@@ -279,6 +283,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 8,
+    color: colors.text01,
   },
   recordDetails: {
     marginBottom: 8,
