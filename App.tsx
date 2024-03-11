@@ -6,6 +6,8 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import ViewPatients from './src/Pages/ShiftManager/Pages/ViewPatients/ViewPatients';
 import HomePage from './src/Pages/Home/HomePage';
+import ViewDoctors from './src/Pages/ShiftManager/Pages/ViewDoctors/ViewDoctors';
+import ViewNurses from './src/Pages/ShiftManager/Pages/ViewNurses/ViewNurses';
 
 const Stack = createStackNavigator();
 const App = () => {
@@ -25,6 +27,16 @@ const App = () => {
         <Stack.Screen
           name="/shift-manager/viewAdmittedPatients"
           component={ViewPatients}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="/shift-manager/viewDoctors"
+          component={ViewDoctors}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="/shift-manager/viewNurses"
+          component={ViewNurses}
           options={{headerShown: false}}
         />
       </Stack.Navigator>
