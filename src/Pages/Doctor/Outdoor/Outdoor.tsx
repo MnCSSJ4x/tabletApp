@@ -1,10 +1,10 @@
+import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import {View, Text, ScrollView, StyleSheet} from 'react-native';
-import Title from './Components/Title';
+import Navbar from '../../Home/Components/Navbar';
+import Title from '../../Home/Components/Title';
 import Records from './Components/Records';
-import Navbar from './Components/Navbar';
 
-const ViewPatients = () => {
+const Outdoor = () => {
   return (
     <View style={styles.container}>
       <Navbar></Navbar>
@@ -13,10 +13,9 @@ const ViewPatients = () => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
 });
-export default ViewPatients;
+export default Outdoor;

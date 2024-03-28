@@ -16,22 +16,17 @@ interface Nurse {
   id: number;
   Nurse_id: string;
   name: string;
-  // age: number;
-  // gender: string;
   department: string;
   designation: string;
   status: string;
   contact: string;
-  // Add more fields as needed
 }
 
 const Records = () => {
   const navigation = useNavigation();
   const [isNurseViewOpen, setNurseDetails] = useState(false);
-  const [isNurseEditOpen, setNurseEdit] = useState(false);
   const [NurseSelected, setNurse] = useState<Nurse>();
   const [searchQuery, setSearchQuery] = useState('');
-  const navigate = useNavigation();
   const Nurses = [
     {
       id: 1,
@@ -169,44 +164,13 @@ const Records = () => {
       status: 'Active',
     },
   ];
-  const [records, setRecords] = useState<
-    {
-      id: number;
-      Nurse_id: string;
-      name: string;
-      // age: number;
-      // gender: string;
-      department: string;
-      designation: string;
-      status: string;
-      contact: string;
-    }[]
-  >(Nurses);
+  const [records, setRecords] = useState(Nurses);
 
-  const handleView = (id: Nurse) => {
+  const handleView = (nurse: Nurse) => {
     setNurseDetails(true);
-    setNurse(id);
-    console.log(`Viewing details of Nurse with ID: ${id}`);
+    setNurse(nurse);
+    console.log(`Viewing details of Nurse with ID: ${nurse.id}`);
   };
-
-  // const handleEdit = (id: Nurse) => {
-  //   setNurseEdit(true);
-  //   setNurse(id);
-  //   console.log(`Editing details of Nurse with ID: ${id}`);
-  // };
-
-  // const handleEditSubmit = (updatedNurse: Nurse) => {
-  //   console.log(updatedNurse);
-  //   setNurseEdit(false);
-  // };
-
-  // const handleDelete = (id: Nurse) => {
-  //   console.log(`Deleting Nurse with ID: ${id}`);
-  // };
-
-  // const handleTransfer = (id: Nurse) => {
-  //   console.log(`Transferring Nurse with ID: ${id}`);
-  // };
 
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
@@ -217,13 +181,18 @@ const Records = () => {
   });
 
   const navigateBack = () => {
-    // Add your navigation logic to go back
-    navigate.goBack();
+    navigation.goBack();
     console.log('Navigating back');
   };
 
-  function handleGrantAccess(NurseSelected: Nurse | undefined): void {
-    throw new Error('Function not implemented.');
+  const handleGrantAccess = (nurse: Nurse): void => {
+    console.log('Granting access to Nurse:', nurse);
+    navigation.navigate('/shift-manager/viewNurses/giveAccess', {nurse});
+  };
+
+  function handleDuty(nurse: Nurse): void {
+    console.log('Granting duty to Nurse:', nurse);
+    navigation.navigate('/shift-manager/viewNurses/giveDuty', {nurse});
   }
 
   return (
@@ -277,17 +246,15 @@ const Records = () => {
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.viewButton}
-                onPress={() => handleGrantAccess(NurseSelected)}>
+                onPress={() => handleGrantAccess(record)}>
                 <Text style={styles.buttonText}>Grant HIS Access</Text>
               </TouchableOpacity>
-              {record.status != 'Active' ? (
+              {record.status !== 'Active' && (
                 <TouchableOpacity
                   style={styles.viewButton}
-                  onPress={() => handleGrantAccess(NurseSelected)}>
+                  onPress={() => handleDuty(record)}>
                   <Text style={styles.buttonText}>Give Duty</Text>
                 </TouchableOpacity>
-              ) : (
-                <></>
               )}
             </View>
           </View>
@@ -355,26 +322,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     flex: 1, // Equal width for both buttons
     marginRight: 4, // Add margin between buttons if needed
-  },
-  editButton: {
-    backgroundColor: colors.inverseSupport03,
-    padding: 10,
-    borderRadius: 8,
-    flex: 1,
-    marginRight: 4,
-  },
-  transferButton: {
-    backgroundColor: colors.interactive01,
-    padding: 10,
-    borderRadius: 8,
-    flex: 1,
-    marginRight: 4,
-  },
-  deleteButton: {
-    backgroundColor: colors.inverseSupport01,
-    padding: 10,
-    borderRadius: 8,
-    flex: 1,
   },
   buttonText: {
     color: colors.text04,

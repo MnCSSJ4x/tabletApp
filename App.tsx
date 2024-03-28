@@ -8,6 +8,9 @@ import ViewPatients from './src/Pages/ShiftManager/Pages/ViewPatients/ViewPatien
 import HomePage from './src/Pages/Home/HomePage';
 import ViewDoctors from './src/Pages/ShiftManager/Pages/ViewDoctors/ViewDoctors';
 import ViewNurses from './src/Pages/ShiftManager/Pages/ViewNurses/ViewNurses';
+import GiveAccess from './src/Pages/ShiftManager/Pages/ViewNurses/GiveAccess';
+import AddShift from './src/Pages/ShiftManager/Pages/ViewNurses/AddShift';
+import Outdoor from './src/Pages/Doctor/Outdoor/Outdoor';
 
 const Stack = createStackNavigator();
 const App = () => {
@@ -39,6 +42,36 @@ const App = () => {
           component={ViewNurses}
           options={{headerShown: false}}
         />
+        <Stack.Screen
+          name="/shift-manager/viewNurses/addShift"
+          component={AddShift}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="/shift-manager/viewNurses/giveAccess"
+          component={GiveAccess}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="/shift-manager/viewNurses/giveDuty"
+          component={AddShift}
+          options={{headerShown: false}}
+        />
+        {/* <Stack.Screen
+          name="/doctor/indoorMode"
+          component={}
+          options={{headerShown: false}}
+        /> */}
+        <Stack.Screen
+          name="/doctor/outdoorMode"
+          component={Outdoor}
+          options={{headerShown: false}}
+        />
+        {/* <Stack.Screen
+          name="/doctor/outOfOfficeMode"
+          component={}
+          options={{headerShown: false}}
+        /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );

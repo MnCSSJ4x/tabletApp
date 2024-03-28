@@ -30,12 +30,6 @@ const getRoleBasedCards = (role: Role): Card[] => {
           route: '/shift-manager/viewNurses',
         },
         {
-          title: 'Shift Management',
-          clipart: '🔄',
-          description: 'Click to manage shifts.',
-          route: '/shift-manager/shiftManagement',
-        },
-        {
           title: 'View Activity Logs',
           clipart: '📊',
           description: 'Click to view activity logs.',
