@@ -6,7 +6,7 @@ import {globalStyles} from '../styles';
 import getRoleBasedCards from './GetRoleBasedData';
 
 const CardSet: React.FC = () => {
-  const cards = getRoleBasedCards('PracticingDoctor');
+  const cards = getRoleBasedCards('ShiftManager');
 
   const navigation = useNavigation();
 

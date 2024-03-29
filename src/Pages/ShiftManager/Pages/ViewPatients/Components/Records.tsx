@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -11,7 +11,10 @@ import {
 import colors from '../../../../../../colors';
 import {useNavigation} from '@react-navigation/native';
 import PatientDetails from './PatientDetails';
-import EditPatientModal from './EditPatientModal';
+import {authState} from '../../../../../Auth/atom';
+import axios from 'axios';
+import {useRecoilValue} from 'recoil';
+import {GET_ALL_PATIENTS} from '../../../../../../routes';
 
 interface Patient {
   id: number;
@@ -19,7 +22,13 @@ interface Patient {
   name: string;
   age: number;
   gender: string;
-  // Add more fields as needed
+  aabhaId: string;
+  aadharId: string;
+  emailId: string;
+  dateOfBirth: string;
+  emergencyContactNumber: string;
+  patientType: string;
+  dischargeStatus: string;
 }
 
 const Records = () => {
@@ -28,123 +37,59 @@ const Records = () => {
   const [isPatientEditOpen, setPatientEdit] = useState(false);
   const [patientSelected, setPatient] = useState<Patient>();
   const [searchQuery, setSearchQuery] = useState('');
+  const [allPatients, setAllPatients] = useState<Patient[]>([]); // Fix: Initialize with an empty array of type Patient[]
   const navigate = useNavigation();
-  const patients = [
-    {
-      id: 1,
-      patient_id: 'P12345',
-      name: 'John Doe',
-      age: 30,
-      gender: 'Male',
-    },
-    {
-      id: 2,
-      patient_id: 'P54321',
-      name: 'Jane Doe',
-      age: 25,
-      gender: 'Female',
-    },
-    {
-      id: 3,
-      patient_id: 'P78901',
-      name: 'Alice Smith',
-      age: 40,
-      gender: 'Female',
-    },
-    {
-      id: 4,
-      patient_id: 'P98765',
-      name: 'Bob Johnson',
-      age: 35,
-      gender: 'Male',
-    },
-    {
-      id: 5,
-      patient_id: 'P24680',
-      name: 'Michael Williams',
-      age: 45,
-      gender: 'Male',
-    },
-    {
-      id: 6,
-      patient_id: 'P13579',
-      name: 'Emily Brown',
-      age: 28,
-      gender: 'Female',
-    },
-    {
-      id: 7,
-      patient_id: 'P11223',
-      name: 'William Taylor',
-      age: 55,
-      gender: 'Male',
-    },
-    {
-      id: 8,
-      patient_id: 'P44556',
-      name: 'Sophia Martinez',
-      age: 22,
-      gender: 'Female',
-    },
-    {
-      id: 9,
-      patient_id: 'P99887',
-      name: 'Daniel Anderson',
-      age: 38,
-      gender: 'Male',
-    },
-    {
-      id: 10,
-      patient_id: 'P77889',
-      name: 'Olivia Thomas',
-      age: 32,
-      gender: 'Female',
-    },
-    {
-      id: 11,
-      patient_id: 'P11224',
-      name: 'David Jackson',
-      age: 41,
-      gender: 'Male',
-    },
-    {
-      id: 12,
-      patient_id: 'P66776',
-      name: 'Emma White',
-      age: 29,
-      gender: 'Female',
-    },
-    {
-      id: 13,
-      patient_id: 'P33445',
-      name: 'Josephine Harris',
-      age: 47,
-      gender: 'Female',
-    },
-    {
-      id: 14,
-      patient_id: 'P55789',
-      name: 'James Brown',
-      age: 50,
-      gender: 'Male',
-    },
-    {
-      id: 15,
-      patient_id: 'P99887',
-      name: 'Ava Lee',
-      age: 27,
-      gender: 'Female',
-    },
-  ];
-  const [records, setRecords] = useState<
-    {
-      id: number;
-      patient_id: string;
-      name: string;
-      age: number;
-      gender: string;
-    }[]
-  >(patients);
+  let auth = useRecoilValue(authState);
+  let patients:
+    | {
+        id: number;
+        patient_id: string;
+        name: string;
+        age: number;
+        gender: string;
+        aabhaId: string;
+        aadharId: string;
+        emailId: string;
+        dateOfBirth: string;
+        emergencyContactNumber: string;
+        patientType: string;
+        dischargeStatus: string;
+      }[]
+    | (() => {
+        id: number;
+        patient_id: string;
+        name: string;
+        age: number;
+        gender: string;
+        aabhaId: string;
+        aadharId: string;
+        emailId: string;
+        dateOfBirth: string;
+        emergencyContactNumber: string;
+        patientType: string;
+        dischargeStatus: string;
+      }[]) = [];
+  useEffect(() => {
+    const fetchPatients = async () => {
+      try {
+        const token = auth.token; // Retrieve the authorization token from Recoil state
+        const response = await axios.get(GET_ALL_PATIENTS, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (response.status === 200) {
+          setAllPatients(response.data);
+        } else {
+          console.error('Failed to fetch patients:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error occurred while fetching patients:', error);
+      }
+    };
+
+    fetchPatients();
+  }, []);
 
   const handleView = (id: Patient) => {
     setPatientDetails(true);
@@ -152,30 +97,11 @@ const Records = () => {
     console.log(`Viewing details of patient with ID: ${id}`);
   };
 
-  // const handleEdit = (id: Patient) => {
-  //   setPatientEdit(true);
-  //   setPatient(id);
-  //   console.log(`Editing details of patient with ID: ${id}`);
-  // };
-
-  // const handleEditSubmit = (updatedPatient: Patient) => {
-  //   console.log(updatedPatient);
-  //   setPatientEdit(false);
-  // };
-
-  // const handleDelete = (id: Patient) => {
-  //   console.log(`Deleting patient with ID: ${id}`);
-  // };
-
-  // const handleTransfer = (id: Patient) => {
-  //   console.log(`Transferring patient with ID: ${id}`);
-  // };
-
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
   };
 
-  const filteredRecords = records.filter(record => {
+  const filteredRecords = allPatients.filter(record => {
     return record.name.toLowerCase().includes(searchQuery.toLowerCase());
   });
 

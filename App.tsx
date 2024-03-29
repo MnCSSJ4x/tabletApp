@@ -11,69 +11,72 @@ import ViewNurses from './src/Pages/ShiftManager/Pages/ViewNurses/ViewNurses';
 import GiveAccess from './src/Pages/ShiftManager/Pages/ViewNurses/GiveAccess';
 import AddShift from './src/Pages/ShiftManager/Pages/ViewNurses/AddShift';
 import Outdoor from './src/Pages/Doctor/Outdoor/Outdoor';
+import {RecoilRoot} from 'recoil';
 
 const Stack = createStackNavigator();
 const App = () => {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Login"
-          component={LoginPage}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="Home"
-          component={HomePage}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="/shift-manager/viewAdmittedPatients"
-          component={ViewPatients}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="/shift-manager/viewDoctors"
-          component={ViewDoctors}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="/shift-manager/viewNurses"
-          component={ViewNurses}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="/shift-manager/viewNurses/addShift"
-          component={AddShift}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="/shift-manager/viewNurses/giveAccess"
-          component={GiveAccess}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="/shift-manager/viewNurses/giveDuty"
-          component={AddShift}
-          options={{headerShown: false}}
-        />
-        {/* <Stack.Screen
+    <RecoilRoot>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Login"
+            component={LoginPage}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Home"
+            component={HomePage}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="/shift-manager/viewAdmittedPatients"
+            component={ViewPatients}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="/shift-manager/viewDoctors"
+            component={ViewDoctors}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="/shift-manager/viewNurses"
+            component={ViewNurses}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="/shift-manager/viewNurses/addShift"
+            component={AddShift}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="/shift-manager/viewNurses/giveAccess"
+            component={GiveAccess}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="/shift-manager/viewNurses/giveDuty"
+            component={AddShift}
+            options={{headerShown: false}}
+          />
+          {/* <Stack.Screen
           name="/doctor/indoorMode"
           component={}
           options={{headerShown: false}}
         /> */}
-        <Stack.Screen
-          name="/doctor/outdoorMode"
-          component={Outdoor}
-          options={{headerShown: false}}
-        />
-        {/* <Stack.Screen
+          <Stack.Screen
+            name="/doctor/outdoorMode"
+            component={Outdoor}
+            options={{headerShown: false}}
+          />
+          {/* <Stack.Screen
           name="/doctor/outOfOfficeMode"
           component={}
           options={{headerShown: false}}
         /> */}
-      </Stack.Navigator>
-    </NavigationContainer>
+        </Stack.Navigator>
+      </NavigationContainer>
+    </RecoilRoot>
   );
 };
 

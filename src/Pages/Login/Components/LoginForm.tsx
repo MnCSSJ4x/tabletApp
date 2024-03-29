@@ -7,14 +7,18 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
+import {useRecoilState} from 'recoil';
+import {authState} from '../../../Auth/atom';
 import colors from '../../../../colors';
 import {useNavigation} from '@react-navigation/native';
-
+import {LOGIN} from '../../../../routes';
+import axios from 'axios';
 const LoginForm = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigation = useNavigation();
+  const [auth, setAuth] = useRecoilState(authState);
 
   const handleSubmit = async () => {
     // Basic form validation
@@ -23,22 +27,23 @@ const LoginForm = () => {
       return;
     }
 
-    // Replace with your actual API call
-    // const response = await fetch('/api/login', {
-    //   method: 'POST',
-    //   body: JSON.stringify({ username, password }),
-    // });
+    try {
+      const response = await axios.post(LOGIN, {
+        uuid: username,
+        password: password,
+      });
 
-    // if (response.ok) {
-    //   const data = await response.json();
-    //   // Handle successful login
-    //   setError('');
-    // //   onSuccessfulLogin(); // Invoke the callback for successful login
-    // } else {
-    //   // Handle login failure (e.g., display error message)
-    //   setError('Invalid username or password. Please try again.');
-    // }
-    navigation.navigate('Home'); // Use the name of your home page screen
+      if (response.status === 200) {
+        const {token} = response.data;
+        setAuth({token});
+        navigation.navigate('Home');
+      } else {
+        setError('Invalid username or password. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error occurred during login:', error);
+      setError('An error occurred. Please try again later.');
+    }
   };
 
   const handleForgotPassword = () => {

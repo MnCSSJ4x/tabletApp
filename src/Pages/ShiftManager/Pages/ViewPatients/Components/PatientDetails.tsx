@@ -15,7 +15,13 @@ interface Patient {
   name: string;
   age: number;
   gender: string;
-  // Add more fields as needed
+  aabhaId: string;
+  aadharId: string;
+  emailId: string;
+  dateOfBirth: string;
+  emergencyContactNumber: string;
+  patientType: string;
+  dischargeStatus: string;
 }
 
 const PatientDetails: React.FC<PatientDetailsProps> = ({
@@ -23,6 +29,7 @@ const PatientDetails: React.FC<PatientDetailsProps> = ({
   isOpen,
   onClose,
 }) => {
+  console.log(patient.patient_id);
   return (
     <Modal isVisible={isOpen} backdropOpacity={0.7}>
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
