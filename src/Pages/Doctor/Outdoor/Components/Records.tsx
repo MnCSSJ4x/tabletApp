@@ -18,7 +18,13 @@ interface Patient {
   name: string;
   age: number;
   gender: string;
-  // Add more fields as needed
+  aabhaId: string;
+  aadharId: string;
+  emailId: string;
+  dateOfBirth: string;
+  emergencyContactNumber: string;
+  patientType: string;
+  dischargeStatus: string;
 }
 
 const Records = () => {
@@ -28,13 +34,20 @@ const Records = () => {
   const [patientSelected, setPatient] = useState<Patient>();
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigation();
-  const patients = [
+  const patients: Patient[] = [
     {
       id: 1,
       patient_id: 'P12345',
       name: 'John Doe',
       age: 30,
       gender: 'Male',
+      aabhaId: 'A123',
+      aadharId: '123456789012',
+      emailId: 'john.doe@example.com',
+      dateOfBirth: '1992-05-15',
+      emergencyContactNumber: '123-456-7890',
+      patientType: 'Regular',
+      dischargeStatus: 'Active',
     },
     {
       id: 2,
@@ -42,6 +55,13 @@ const Records = () => {
       name: 'Jane Doe',
       age: 25,
       gender: 'Female',
+      aabhaId: 'A456',
+      aadharId: '987654321098',
+      emailId: 'jane.doe@example.com',
+      dateOfBirth: '1997-10-20',
+      emergencyContactNumber: '987-654-3210',
+      patientType: 'Emergency',
+      dischargeStatus: 'Discharged',
     },
     {
       id: 3,
@@ -49,6 +69,13 @@ const Records = () => {
       name: 'Alice Smith',
       age: 40,
       gender: 'Female',
+      aabhaId: 'A789',
+      aadharId: '456789012345',
+      emailId: 'alice.smith@example.com',
+      dateOfBirth: '1984-03-25',
+      emergencyContactNumber: '456-789-0123',
+      patientType: 'Regular',
+      dischargeStatus: 'Active',
     },
     {
       id: 4,
@@ -56,6 +83,13 @@ const Records = () => {
       name: 'Bob Johnson',
       age: 35,
       gender: 'Male',
+      aabhaId: 'A987',
+      aadharId: '345678901234',
+      emailId: 'bob.johnson@example.com',
+      dateOfBirth: '1989-08-10',
+      emergencyContactNumber: '345-678-9012',
+      patientType: 'Emergency',
+      dischargeStatus: 'Discharged',
     },
     {
       id: 5,
@@ -63,6 +97,13 @@ const Records = () => {
       name: 'Michael Williams',
       age: 45,
       gender: 'Male',
+      aabhaId: 'A246',
+      aadharId: '234567890123',
+      emailId: 'michael.williams@example.com',
+      dateOfBirth: '1979-11-30',
+      emergencyContactNumber: '234-567-8901',
+      patientType: 'Regular',
+      dischargeStatus: 'Active',
     },
     {
       id: 6,
@@ -70,80 +111,16 @@ const Records = () => {
       name: 'Emily Brown',
       age: 28,
       gender: 'Female',
-    },
-    {
-      id: 7,
-      patient_id: 'P11223',
-      name: 'William Taylor',
-      age: 55,
-      gender: 'Male',
-    },
-    {
-      id: 8,
-      patient_id: 'P44556',
-      name: 'Sophia Martinez',
-      age: 22,
-      gender: 'Female',
-    },
-    {
-      id: 9,
-      patient_id: 'P99887',
-      name: 'Daniel Anderson',
-      age: 38,
-      gender: 'Male',
-    },
-    {
-      id: 10,
-      patient_id: 'P77889',
-      name: 'Olivia Thomas',
-      age: 32,
-      gender: 'Female',
-    },
-    {
-      id: 11,
-      patient_id: 'P11224',
-      name: 'David Jackson',
-      age: 41,
-      gender: 'Male',
-    },
-    {
-      id: 12,
-      patient_id: 'P66776',
-      name: 'Emma White',
-      age: 29,
-      gender: 'Female',
-    },
-    {
-      id: 13,
-      patient_id: 'P33445',
-      name: 'Josephine Harris',
-      age: 47,
-      gender: 'Female',
-    },
-    {
-      id: 14,
-      patient_id: 'P55789',
-      name: 'James Brown',
-      age: 50,
-      gender: 'Male',
-    },
-    {
-      id: 15,
-      patient_id: 'P99887',
-      name: 'Ava Lee',
-      age: 27,
-      gender: 'Female',
+      aabhaId: 'A135',
+      aadharId: '123456789012',
+      emailId: 'emily.brown@example.com',
+      dateOfBirth: '1996-02-18',
+      emergencyContactNumber: '123-456-7890',
+      patientType: 'Emergency',
+      dischargeStatus: 'Discharged',
     },
   ];
-  const [records, setRecords] = useState<
-    {
-      id: number;
-      patient_id: string;
-      name: string;
-      age: number;
-      gender: string;
-    }[]
-  >(patients);
+  const [records, setRecords] = useState<Patient[]>(patients);
 
   const handleView = (id: Patient) => {
     setPatientDetails(true);
@@ -165,15 +142,9 @@ const Records = () => {
     console.log('Navigating back');
   };
 
-  function handleAttend(record: {
-    id: number;
-    patient_id: string;
-    name: string;
-    age: number;
-    gender: string;
-  }): void {
-    throw new Error('Function not implemented.');
-  }
+  const handleAttend = (record: Patient) => {
+    navigate.navigate('/doctor/outdoorMode/attend', {record});
+  };
 
   return (
     <View style={styles.container}>
@@ -212,14 +183,6 @@ const Records = () => {
             onClose={() => setPatientDetails(false)}
           />
         )}
-        {/* {patientSelected && (
-          <EditPatientModal
-            patient={patientSelected}
-            isOpen={isPatientEditOpen}
-            onClose={() => setPatientEdit(false)}
-            onSubmit={updatedPatient => handleEditSubmit(updatedPatient)}
-          />
-        )} */}
       </View>
     </View>
   );

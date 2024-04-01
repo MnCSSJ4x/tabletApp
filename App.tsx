@@ -12,6 +12,7 @@ import GiveAccess from './src/Pages/ShiftManager/Pages/ViewNurses/GiveAccess';
 import AddShift from './src/Pages/ShiftManager/Pages/ViewNurses/AddShift';
 import Outdoor from './src/Pages/Doctor/Outdoor/Outdoor';
 import {RecoilRoot} from 'recoil';
+import AttendPatient from './src/Pages/Doctor/Outdoor/AttendPatient/AttendPatient';
 
 const Stack = createStackNavigator();
 const App = () => {
@@ -57,6 +58,11 @@ const App = () => {
           <Stack.Screen
             name="/shift-manager/viewNurses/giveDuty"
             component={AddShift}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="/doctor/outdoorMode/attend"
+            component={AttendPatient}
             options={{headerShown: false}}
           />
           {/* <Stack.Screen

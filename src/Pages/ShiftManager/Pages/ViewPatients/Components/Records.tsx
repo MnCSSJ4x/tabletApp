@@ -135,21 +135,6 @@ const Records = () => {
                 onPress={() => handleView(record)}>
                 <Text style={styles.buttonText}>View</Text>
               </TouchableOpacity>
-              {/* <TouchableOpacity
-                style={styles.editButton}
-                onPress={() => handleEdit(record)}>
-                <Text style={styles.buttonText}>Edit</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.transferButton}
-                onPress={() => handleTransfer(record)}>
-                <Text style={styles.buttonText}>Transfer</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.deleteButton}
-                onPress={() => handleDelete(record)}>
-                <Text style={styles.buttonText}>Delete</Text>
-              </TouchableOpacity> */}
             </View>
           </View>
         ))}
@@ -163,14 +148,6 @@ const Records = () => {
             onClose={() => setPatientDetails(false)}
           />
         )}
-        {/* {patientSelected && (
-          <EditPatientModal
-            patient={patientSelected}
-            isOpen={isPatientEditOpen}
-            onClose={() => setPatientEdit(false)}
-            onSubmit={updatedPatient => handleEditSubmit(updatedPatient)}
-          />
-        )} */}
       </View>
     </View>
   );
