@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -11,160 +11,43 @@ import {
 import colors from '../../../../../../colors';
 import {useNavigation} from '@react-navigation/native';
 import NurseDetails from './NurseDetails';
-
-interface Nurse {
-  id: number;
-  Nurse_id: string;
-  name: string;
-  department: string;
-  designation: string;
-  status: string;
-  contact: string;
-}
+import axios from 'axios';
+import {useRecoilValue} from 'recoil';
+import {authState} from '../../../../../Auth/atom';
+import {GET_ALL_NURSES} from '../../../../../../routes';
+import Nurse from './Nurse';
 
 const Records = () => {
   const navigation = useNavigation();
   const [isNurseViewOpen, setNurseDetails] = useState(false);
   const [NurseSelected, setNurse] = useState<Nurse>();
+  const [records, setRecords] = useState<Nurse[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const Nurses = [
-    {
-      id: 1,
-      Nurse_id: 'P12345',
-      name: 'John Doe',
-      department: 'Cardiology',
-      designation: 'Senior Cardiologist',
-      contact: '+1 (123) 456-7890',
-      status: 'Active',
-    },
-    {
-      id: 2,
-      Nurse_id: 'P54321',
-      name: 'Jane Doe',
-      department: 'Pediatrics',
-      designation: 'Pediatrician',
-      contact: '+1 (234) 567-8901',
-      status: 'Active',
-    },
-    {
-      id: 3,
-      Nurse_id: 'P78901',
-      name: 'Alice Smith',
-      department: 'Internal Medicine',
-      designation: 'General Practitioner',
-      contact: '+1 (345) 678-9012',
-      status: 'Inactive',
-    },
-    {
-      id: 4,
-      Nurse_id: 'P98765',
-      name: 'Bob Johnson',
-      department: 'Orthopedics',
-      designation: 'Orthopedic Surgeon',
-      contact: '+1 (456) 789-0123',
-      status: 'Active',
-    },
-    {
-      id: 5,
-      Nurse_id: 'P24680',
-      name: 'Michael Williams',
-      department: 'Ophthalmology',
-      designation: 'Ophthalmologist',
-      contact: '+1 (567) 890-1234',
-      status: 'Active',
-    },
-    {
-      id: 6,
-      Nurse_id: 'P13579',
-      name: 'Emily Brown',
-      department: 'Dermatology',
-      designation: 'Dermatologist',
-      contact: '+1 (678) 901-2345',
-      status: 'Inactive',
-    },
-    {
-      id: 7,
-      Nurse_id: 'P11223',
-      name: 'William Taylor',
-      department: 'Neurology',
-      designation: 'Neurologist',
-      contact: '+1 (789) 012-3456',
-      status: 'Active',
-    },
-    {
-      id: 8,
-      Nurse_id: 'P44556',
-      name: 'Sophia Martinez',
-      department: 'Gynecology',
-      designation: 'Gynecologist',
-      contact: '+1 (890) 123-4567',
-      status: 'Active',
-    },
-    {
-      id: 9,
-      Nurse_id: 'P99887',
-      name: 'Daniel Anderson',
-      department: 'ENT',
-      designation: 'ENT Specialist',
-      contact: '+1 (901) 234-5678',
-      status: 'Inactive',
-    },
-    {
-      id: 10,
-      Nurse_id: 'P77889',
-      name: 'Olivia Thomas',
-      department: 'Psychiatry',
-      designation: 'Psychiatrist',
-      contact: '+1 (012) 345-6789',
-      status: 'Active',
-    },
-    {
-      id: 11,
-      Nurse_id: 'P11224',
-      name: 'David Jackson',
-      department: 'Cardiology',
-      designation: 'Cardiologist',
-      contact: '+1 (123) 456-7890',
-      status: 'Inactive',
-    },
-    {
-      id: 12,
-      Nurse_id: 'P66776',
-      name: 'Emma White',
-      department: 'Dentistry',
-      designation: 'Dentist',
-      contact: '+1 (234) 567-8901',
-      status: 'Active',
-    },
-    {
-      id: 13,
-      Nurse_id: 'P33445',
-      name: 'Josephine Harris',
-      department: 'Oncology',
-      designation: 'Oncologist',
-      contact: '+1 (345) 678-9012',
-      status: 'Active',
-    },
-    {
-      id: 14,
-      Nurse_id: 'P55789',
-      name: 'James Brown',
-      department: 'Orthopedics',
-      designation: 'Orthopedic Specialist',
-      contact: '+1 (456) 789-0123',
-      status: 'Inactive',
-    },
-    {
-      id: 15,
-      Nurse_id: 'P99887',
-      name: 'Ava Lee',
-      department: 'Cardiology',
-      designation: 'Cardiologist',
-      contact: '+1 (567) 890-1234',
-      status: 'Active',
-    },
-  ];
-  const [records, setRecords] = useState(Nurses);
+  let auth = useRecoilValue(authState);
+
+  useEffect(() => {
+    const fetchNurses = async () => {
+      try {
+        const token = auth.token;
+        const response = await axios.get(GET_ALL_NURSES, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.status === 200) {
+          // Assuming response.data is an array of nurses
+          setRecords(response.data);
+        } else {
+          console.error('Failed to fetch nurse records:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching nurse records:', error);
+      }
+    };
+
+    fetchNurses();
+  }, []);
 
   const handleView = (nurse: Nurse) => {
     setNurseDetails(true);
@@ -213,15 +96,12 @@ const Records = () => {
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                 }}>
-                <Text style={{color: colors.text01}}>Status:</Text>
+                <Text style={{color: colors.text01}}>Last Checked in:</Text>
                 <Text
                   style={{
-                    color:
-                      record.status === 'Active'
-                        ? colors.inverseSupport02
-                        : colors.inverseSupport01,
+                    color: colors.text02,
                   }}>
-                  {record.status}
+                  {record.lastCheckIn}
                 </Text>
               </View>
               <View
@@ -229,12 +109,15 @@ const Records = () => {
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                 }}>
-                <Text style={{color: colors.text01}}>Contact:</Text>
+                <Text style={{color: colors.text01}}>Status: </Text>
                 <Text
                   style={{
-                    color: colors.text02,
+                    color:
+                      record.employeeStatus === 'CHECKED_IN'
+                        ? colors.inverseSupport02
+                        : colors.inverseSupport01,
                   }}>
-                  {record.contact}
+                  {record.employeeStatus}
                 </Text>
               </View>
             </View>
@@ -249,13 +132,13 @@ const Records = () => {
                 onPress={() => handleGrantAccess(record)}>
                 <Text style={styles.buttonText}>Grant HIS Access</Text>
               </TouchableOpacity>
-              {record.status !== 'Active' && (
+              {
                 <TouchableOpacity
                   style={styles.viewButton}
                   onPress={() => handleDuty(record)}>
                   <Text style={styles.buttonText}>Give Duty</Text>
                 </TouchableOpacity>
-              )}
+              }
             </View>
           </View>
         ))}
@@ -292,7 +175,7 @@ const styles = StyleSheet.create({
   gridContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
   },
   recordContainer: {
     backgroundColor: colors.ui02,

@@ -14,22 +14,8 @@ import PatientDetails from './PatientDetails';
 import {authState} from '../../../../../Auth/atom';
 import axios from 'axios';
 import {useRecoilValue} from 'recoil';
-import {GET_ALL_PATIENTS} from '../../../../../../routes';
-
-interface Patient {
-  id: number;
-  patient_id: string;
-  name: string;
-  age: number;
-  gender: string;
-  aabhaId: string;
-  aadharId: string;
-  emailId: string;
-  dateOfBirth: string;
-  emergencyContactNumber: string;
-  patientType: string;
-  dischargeStatus: string;
-}
+import {GET_ALL_INPATIENTS} from '../../../../../../routes';
+import Patient from './Patient';
 
 const Records = () => {
   const navigation = useNavigation();
@@ -40,21 +26,9 @@ const Records = () => {
   const [allPatients, setAllPatients] = useState<Patient[]>([]); // Fix: Initialize with an empty array of type Patient[]
   const navigate = useNavigation();
   let auth = useRecoilValue(authState);
+  // console.log(auth.token);
   let patients:
-    | {
-        id: number;
-        patient_id: string;
-        name: string;
-        age: number;
-        gender: string;
-        aabhaId: string;
-        aadharId: string;
-        emailId: string;
-        dateOfBirth: string;
-        emergencyContactNumber: string;
-        patientType: string;
-        dischargeStatus: string;
-      }[]
+    | Patient[]
     | (() => {
         id: number;
         patient_id: string;
@@ -73,7 +47,7 @@ const Records = () => {
     const fetchPatients = async () => {
       try {
         const token = auth.token; // Retrieve the authorization token from Recoil state
-        const response = await axios.get(GET_ALL_PATIENTS, {
+        const response = await axios.get(GET_ALL_INPATIENTS, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

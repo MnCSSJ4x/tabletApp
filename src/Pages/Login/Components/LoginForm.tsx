@@ -44,7 +44,7 @@ const LoginForm = () => {
       console.error('Error occurred during login:', error);
       setError('An error occurred. Please try again later.');
     }
-    navigation.navigate('Home');
+    // navigation.navigate('Home');
   };
 
   const handleForgotPassword = () => {

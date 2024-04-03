@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -11,202 +11,49 @@ import {
 import colors from '../../../../../../colors';
 import {useNavigation} from '@react-navigation/native';
 import DoctorDetails from './DoctorDetails';
-
-interface Doctor {
-  id: number;
-  Doctor_id: string;
-  name: string;
-  // age: number;
-  // gender: string;
-  department: string;
-  designation: string;
-  status: string;
-  contact: string;
-  // Add more fields as needed
-}
-
+import Doctor from './Doctor';
+import {useRecoilValue} from 'recoil';
+import {authState} from '../../../../../Auth/atom';
+import axios from 'axios';
+import {GET_ALL_DOCTORS} from '../../../../../../routes';
 const Records = () => {
   const navigation = useNavigation();
   const [isDoctorViewOpen, setDoctorDetails] = useState(false);
-  const [isDoctorEditOpen, setDoctorEdit] = useState(false);
   const [DoctorSelected, setDoctor] = useState<Doctor>();
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigation();
-  const Doctors = [
-    {
-      id: 1,
-      Doctor_id: 'P12345',
-      name: 'John Doe',
-      department: 'Cardiology',
-      designation: 'Senior Cardiologist',
-      contact: '+1 (123) 456-7890',
-      status: 'Active',
-    },
-    {
-      id: 2,
-      Doctor_id: 'P54321',
-      name: 'Jane Doe',
-      department: 'Pediatrics',
-      designation: 'Pediatrician',
-      contact: '+1 (234) 567-8901',
-      status: 'Active',
-    },
-    {
-      id: 3,
-      Doctor_id: 'P78901',
-      name: 'Alice Smith',
-      department: 'Internal Medicine',
-      designation: 'General Practitioner',
-      contact: '+1 (345) 678-9012',
-      status: 'Inactive',
-    },
-    {
-      id: 4,
-      Doctor_id: 'P98765',
-      name: 'Bob Johnson',
-      department: 'Orthopedics',
-      designation: 'Orthopedic Surgeon',
-      contact: '+1 (456) 789-0123',
-      status: 'Active',
-    },
-    {
-      id: 5,
-      Doctor_id: 'P24680',
-      name: 'Michael Williams',
-      department: 'Ophthalmology',
-      designation: 'Ophthalmologist',
-      contact: '+1 (567) 890-1234',
-      status: 'Active',
-    },
-    {
-      id: 6,
-      Doctor_id: 'P13579',
-      name: 'Emily Brown',
-      department: 'Dermatology',
-      designation: 'Dermatologist',
-      contact: '+1 (678) 901-2345',
-      status: 'Inactive',
-    },
-    {
-      id: 7,
-      Doctor_id: 'P11223',
-      name: 'William Taylor',
-      department: 'Neurology',
-      designation: 'Neurologist',
-      contact: '+1 (789) 012-3456',
-      status: 'Active',
-    },
-    {
-      id: 8,
-      Doctor_id: 'P44556',
-      name: 'Sophia Martinez',
-      department: 'Gynecology',
-      designation: 'Gynecologist',
-      contact: '+1 (890) 123-4567',
-      status: 'Active',
-    },
-    {
-      id: 9,
-      Doctor_id: 'P99887',
-      name: 'Daniel Anderson',
-      department: 'ENT',
-      designation: 'ENT Specialist',
-      contact: '+1 (901) 234-5678',
-      status: 'Inactive',
-    },
-    {
-      id: 10,
-      Doctor_id: 'P77889',
-      name: 'Olivia Thomas',
-      department: 'Psychiatry',
-      designation: 'Psychiatrist',
-      contact: '+1 (012) 345-6789',
-      status: 'Active',
-    },
-    {
-      id: 11,
-      Doctor_id: 'P11224',
-      name: 'David Jackson',
-      department: 'Cardiology',
-      designation: 'Cardiologist',
-      contact: '+1 (123) 456-7890',
-      status: 'Inactive',
-    },
-    {
-      id: 12,
-      Doctor_id: 'P66776',
-      name: 'Emma White',
-      department: 'Dentistry',
-      designation: 'Dentist',
-      contact: '+1 (234) 567-8901',
-      status: 'Active',
-    },
-    {
-      id: 13,
-      Doctor_id: 'P33445',
-      name: 'Josephine Harris',
-      department: 'Oncology',
-      designation: 'Oncologist',
-      contact: '+1 (345) 678-9012',
-      status: 'Active',
-    },
-    {
-      id: 14,
-      Doctor_id: 'P55789',
-      name: 'James Brown',
-      department: 'Orthopedics',
-      designation: 'Orthopedic Specialist',
-      contact: '+1 (456) 789-0123',
-      status: 'Inactive',
-    },
-    {
-      id: 15,
-      Doctor_id: 'P99887',
-      name: 'Ava Lee',
-      department: 'Cardiology',
-      designation: 'Cardiologist',
-      contact: '+1 (567) 890-1234',
-      status: 'Active',
-    },
-  ];
-  const [records, setRecords] = useState<
-    {
-      id: number;
-      Doctor_id: string;
-      name: string;
-      // age: number;
-      // gender: string;
-      department: string;
-      designation: string;
-      status: string;
-      contact: string;
-    }[]
-  >(Doctors);
+  let auth = useRecoilValue(authState);
+  const [records, setRecords] = useState<Doctor[]>([]);
+
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        const token = auth.token;
+        const response = await axios.get(GET_ALL_DOCTORS, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.status === 200) {
+          // Assuming response.data is an array of nurses
+          setRecords(response.data);
+        } else {
+          console.error('Failed to fetch doctor records:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching doctor records:', error);
+      }
+    };
+
+    fetchDoctors();
+  }, []);
 
   const handleView = (id: Doctor) => {
     setDoctorDetails(true);
     setDoctor(id);
     console.log(`Viewing details of Doctor with ID: ${id}`);
   };
-
-  // const handleEdit = (id: Doctor) => {
-  //   setDoctorEdit(true);
-  //   setDoctor(id);
-  //   console.log(`Editing details of Doctor with ID: ${id}`);
-  // };
-
-  // const handleEditSubmit = (updatedDoctor: Doctor) => {
-  //   console.log(updatedDoctor);
-  //   setDoctorEdit(false);
-  // };
-
-  // const handleDelete = (id: Doctor) => {
-  //   console.log(`Deleting Doctor with ID: ${id}`);
-  // };
-
-  // const handleTransfer = (id: Doctor) => {
-  //   console.log(`Transferring Doctor with ID: ${id}`);
-  // };
 
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
@@ -217,7 +64,6 @@ const Records = () => {
   });
 
   const navigateBack = () => {
-    // Add your navigation logic to go back
     navigate.goBack();
     console.log('Navigating back');
   };
@@ -244,11 +90,11 @@ const Records = () => {
                 <Text
                   style={{
                     color:
-                      record.status === 'Active'
+                      record.employeeStatus === 'CHECKED_IN'
                         ? colors.inverseSupport02
                         : colors.inverseSupport01,
                   }}>
-                  {record.status}
+                  {record.employeeStatus}
                 </Text>
               </View>
               <View
@@ -256,12 +102,12 @@ const Records = () => {
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                 }}>
-                <Text style={{color: colors.text01}}>Contact:</Text>
+                <Text style={{color: colors.text01}}>Last Checked in:</Text>
                 <Text
                   style={{
                     color: colors.text02,
                   }}>
-                  {record.contact}
+                  {record.lastCheckIn}
                 </Text>
               </View>
             </View>
@@ -307,7 +153,7 @@ const styles = StyleSheet.create({
   gridContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
   },
   recordContainer: {
     backgroundColor: colors.ui02,

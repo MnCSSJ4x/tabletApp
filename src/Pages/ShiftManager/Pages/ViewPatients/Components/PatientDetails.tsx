@@ -2,26 +2,12 @@ import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import Modal from 'react-native-modal';
 import colors from '../../../../../../colors';
+import Patient from './Patient';
 
 interface PatientDetailsProps {
   patient: Patient;
   isOpen: boolean;
   onClose: () => void;
-}
-
-interface Patient {
-  id: number;
-  patient_id: string;
-  name: string;
-  age: number;
-  gender: string;
-  aabhaId: string;
-  aadharId: string;
-  emailId: string;
-  dateOfBirth: string;
-  emergencyContactNumber: string;
-  patientType: string;
-  dischargeStatus: string;
 }
 
 const PatientDetails: React.FC<PatientDetailsProps> = ({

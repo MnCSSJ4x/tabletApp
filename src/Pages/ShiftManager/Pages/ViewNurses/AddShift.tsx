@@ -11,20 +11,11 @@ import {Picker} from '@react-native-picker/picker';
 import DatePicker from 'react-native-date-picker'; // Assuming you're using this library for date picker
 import {useNavigation} from '@react-navigation/native';
 import colors from '../../../../../colors';
-
-interface Nurse {
-  id: number;
-  Nurse_id: string;
-  name: string;
-  department: string;
-  designation: string;
-  status: string;
-  contact: string;
-}
+import Nurse from './Components/Nurse';
 
 const AddShift: React.FC = ({route}) => {
-  const nurseInfo = route.params['nurse'];
-  const [nurseId, setNurseId] = useState(nurseInfo.Nurse_id); // Prefill Nurse ID
+  const nurseInfo: Nurse = route.params['nurse'];
+  const [nurseId, setNurseId] = useState(nurseInfo.employeeId); // Prefill Nurse ID
   const [nurseName, setNurseName] = useState(nurseInfo.name); // Prefill Nurse Name
   const [department, setDepartment] = useState(' '); // Department state
   const [fromDate, setFromDate] = useState(new Date());
@@ -80,12 +71,12 @@ const AddShift: React.FC = ({route}) => {
       <TouchableOpacity
         onPress={() => setIsFromPickerVisible(true)}
         style={styles.input}>
-        <Text>{fromDate ? fromDate.toDateString() : 'From'}</Text>
+        <Text>{fromDate ? 'From:  ' + fromDate.toDateString() : 'From'}</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => setIsToPickerVisible(true)}
         style={styles.input}>
-        <Text>{toDate ? toDate.toDateString() : 'To'}</Text>
+        <Text>{toDate ? 'To:  ' + toDate.toDateString() : 'To'}</Text>
       </TouchableOpacity>
       <DatePicker
         modal

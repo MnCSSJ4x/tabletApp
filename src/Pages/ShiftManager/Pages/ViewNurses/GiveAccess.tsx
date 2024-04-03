@@ -10,19 +10,9 @@ import DatePicker from 'react-native-date-picker';
 import {useNavigation} from '@react-navigation/native';
 import colors from '../../../../../colors';
 
-interface Nurse {
-  id: number;
-  Nurse_id: string;
-  name: string;
-  department: string;
-  designation: string;
-  status: string;
-  contact: string;
-}
-
 const GiveAccessForm: React.FC = ({route}) => {
   const nurseInfo = route.params['nurse'];
-  const [nurseId, setNurseId] = useState(nurseInfo.Nurse_id); // Prefill Nurse ID
+  const [nurseId, setNurseId] = useState(nurseInfo.employeeId); // Prefill Nurse ID
   const [nurseName, setNurseName] = useState(nurseInfo.name); // Prefill Nurse Name
   const [fromDate, setFromDate] = useState(new Date());
   const [toDate, setToDate] = useState(new Date());
@@ -48,14 +38,14 @@ const GiveAccessForm: React.FC = ({route}) => {
       <Text style={styles.title}>Transfer Ownership to Nurse</Text>
       <TextInput
         style={styles.input}
-        placeholder={nurseId}
+        placeholder={'Nurse ID:  ' + nurseId}
         value={nurseId}
         onChangeText={setNurseId}
         editable={false} // Lock Nurse ID field
       />
       <TextInput
         style={styles.input}
-        placeholder={nurseName}
+        placeholder={'Name:  ' + nurseName}
         value={nurseName}
         onChangeText={setNurseName}
         editable={false} // Lock Nurse Name field
@@ -63,12 +53,12 @@ const GiveAccessForm: React.FC = ({route}) => {
       <TouchableOpacity
         onPress={() => setIsFromPickerVisible(true)}
         style={styles.input}>
-        <Text>{fromDate ? fromDate.toDateString() : 'From'}</Text>
+        <Text>{fromDate ? 'From:  ' + fromDate.toDateString() : 'From'}</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => setIsToPickerVisible(true)}
         style={styles.input}>
-        <Text>{toDate ? toDate.toDateString() : 'To'}</Text>
+        <Text>{toDate ? 'To:  ' + toDate.toDateString() : 'To'}</Text>
       </TouchableOpacity>
       <DatePicker
         modal
