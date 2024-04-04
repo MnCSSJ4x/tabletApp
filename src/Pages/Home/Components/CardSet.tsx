@@ -1,15 +1,16 @@
 // CardSet.tsx
 import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {globalStyles} from '../styles';
 import getRoleBasedCards from './GetRoleBasedData';
 
 const CardSet: React.FC = () => {
-  const cards = getRoleBasedCards('ShiftManager');
-
+  const route = useRoute();
+  console.log(route.params);
+  const role = route.params['type'];
+  const cards = getRoleBasedCards(role);
   const navigation = useNavigation();
-
   const handleCardClick = (route: string) => {
     // Handle the click event for each card
     navigation.navigate(route);

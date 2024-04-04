@@ -8,51 +8,62 @@ import {
   Button,
   StyleSheet,
 } from 'react-native';
-import colors from '../../../../../../colors';
-import {useNavigation} from '@react-navigation/native';
-import DoctorDetails from './DoctorDetails';
-import Doctor from './Doctor';
+import colors from '../../../../../colors';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import PatientDetails from './PatientDetails';
+import Patient from './Patient';
 import {useRecoilValue} from 'recoil';
-import {authState} from '../../../../../Auth/atom';
+import {authState} from '../../../../Auth/atom';
 import axios from 'axios';
-import {GET_ALL_DOCTORS} from '../../../../../../routes';
+import {
+  GET_INPATIENTS_BY_DOCTOR_ID,
+  GET_OUTPATIENTS_BY_DOCTOR_ID,
+} from '../../../../../routes';
+
 const Records = () => {
   const navigation = useNavigation();
-  const [isDoctorViewOpen, setDoctorDetails] = useState(false);
-  const [DoctorSelected, setDoctor] = useState<Doctor>();
+  const [isPatientViewOpen, setPatientDetails] = useState(false);
+  const [isPatientEditOpen, setPatientEdit] = useState(false);
+  const [patientSelected, setPatient] = useState<Patient>();
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigation();
-  let auth = useRecoilValue(authState);
-  const [records, setRecords] = useState<Doctor[]>([]);
 
+  const [records, setRecords] = useState<Patient[]>([]);
+  let auth = useRecoilValue(authState);
+  const route = useRoute();
+  const mode = useRoute().name.split('/')[2];
+  console.log(mode);
   useEffect(() => {
-    const fetchDoctors = async () => {
+    const fetchPatients = async () => {
       try {
-        const token = auth.token;
-        const response = await axios.get(GET_ALL_DOCTORS, {
+        const token = auth.token; // Retrieve the authorization token from Recoil state
+        const uname = auth.user_id;
+        const query_string =
+          (mode === 'indoorMode'
+            ? GET_INPATIENTS_BY_DOCTOR_ID
+            : GET_OUTPATIENTS_BY_DOCTOR_ID) + uname;
+        console.log(query_string);
+        const response = await axios.get(GET_INPATIENTS_BY_DOCTOR_ID + uname, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-
         if (response.status === 200) {
-          // Assuming response.data is an array of nurses
-          setRecords(response.data);
+          setPatient(response.data);
         } else {
-          console.error('Failed to fetch doctor records:', response.statusText);
+          console.error('Failed to fetch patients:', response.statusText);
         }
       } catch (error) {
-        console.error('Error fetching doctor records:', error);
+        console.error('Error occurred while fetching patients:', error);
       }
     };
 
-    fetchDoctors();
+    fetchPatients();
   }, []);
-
-  const handleView = (id: Doctor) => {
-    setDoctorDetails(true);
-    setDoctor(id);
-    console.log(`Viewing details of Doctor with ID: ${id}`);
+  const handleView = (id: Patient) => {
+    setPatientDetails(true);
+    setPatient(id);
+    console.log(`Viewing details of patient with ID: ${id}`);
   };
 
   const handleSearchChange = (value: string) => {
@@ -64,10 +75,15 @@ const Records = () => {
   });
 
   const navigateBack = () => {
+    // Add your navigation logic to go back
     navigate.goBack();
     console.log('Navigating back');
   };
-  console.log('Records:', records);
+
+  const handleAttend = (record: Patient) => {
+    navigate.navigate(route.name + '/attend', {record});
+  };
+
   return (
     <View style={styles.container}>
       <TextInput
@@ -81,41 +97,16 @@ const Records = () => {
           <View key={record.id} style={styles.recordContainer}>
             <Text style={styles.recordTitle}>{record.name}</Text>
             <View style={styles.recordDetails}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
-                <Text style={{color: colors.text01}}>Status:</Text>
-                <Text
-                  style={{
-                    color:
-                      record.employeeStatus === 'CHECKED_IN'
-                        ? colors.inverseSupport02
-                        : colors.inverseSupport01,
-                  }}>
-                  {record.employeeStatus}
-                </Text>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
-                <Text style={{color: colors.text01}}>Last Checked in:</Text>
-                <Text
-                  style={{
-                    color: colors.text02,
-                  }}>
-                  {record.lastCheckIn}
-                </Text>
-              </View>
+              <Text style={{color: colors.text02}}>Age: {record.age}</Text>
+              <Text style={{color: colors.text02}}>
+                Gender: {record.gender}
+              </Text>
             </View>
             <View style={styles.buttonContainer}>
               <TouchableOpacity
                 style={styles.viewButton}
-                onPress={() => handleView(record)}>
-                <Text style={styles.buttonText}>View</Text>
+                onPress={() => handleAttend(record)}>
+                <Text style={styles.buttonText}>Attend</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -123,11 +114,11 @@ const Records = () => {
       </ScrollView>
       <View style={styles.buttonWrapper}>
         <Button title="Back" onPress={navigateBack} color="#0f62fe" />
-        {DoctorSelected && (
-          <DoctorDetails
-            Doctor={DoctorSelected}
-            isOpen={isDoctorViewOpen}
-            onClose={() => setDoctorDetails(false)}
+        {patientSelected && (
+          <PatientDetails
+            patient={patientSelected}
+            isOpen={isPatientViewOpen}
+            onClose={() => setPatientDetails(false)}
           />
         )}
       </View>
@@ -153,7 +144,7 @@ const styles = StyleSheet.create({
   gridContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-between',
   },
   recordContainer: {
     backgroundColor: colors.ui02,
@@ -162,7 +153,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 8,
     marginBottom: 16,
-    width: '30%', // Adjust the width to display three items in a row
+    width: '48%', // Adjust as needed
   },
   recordTitle: {
     fontSize: 18,

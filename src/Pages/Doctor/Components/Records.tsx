@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -8,24 +8,17 @@ import {
   Button,
   StyleSheet,
 } from 'react-native';
-import colors from '../../../../../colors';
-import {useNavigation} from '@react-navigation/native';
+import colors from '../../../../colors';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import PatientDetails from './PatientDetails';
-
-interface Patient {
-  id: number;
-  patient_id: string;
-  name: string;
-  age: number;
-  gender: string;
-  aabhaId: string;
-  aadharId: string;
-  emailId: string;
-  dateOfBirth: string;
-  emergencyContactNumber: string;
-  patientType: string;
-  dischargeStatus: string;
-}
+import Patient from './Patient';
+import {useRecoilValue} from 'recoil';
+import {authState} from '../../../Auth/atom';
+import axios from 'axios';
+import {
+  GET_INPATIENTS_BY_DOCTOR_ID,
+  GET_OUTPATIENTS_BY_DOCTOR_ID,
+} from '../../../../routes';
 
 const Records = () => {
   const navigation = useNavigation();
@@ -34,94 +27,39 @@ const Records = () => {
   const [patientSelected, setPatient] = useState<Patient>();
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigation();
-  const patients: Patient[] = [
-    {
-      id: 1,
-      patient_id: 'P12345',
-      name: 'John Doe',
-      age: 30,
-      gender: 'Male',
-      aabhaId: 'A123',
-      aadharId: '123456789012',
-      emailId: 'john.doe@example.com',
-      dateOfBirth: '1992-05-15',
-      emergencyContactNumber: '123-456-7890',
-      patientType: 'Regular',
-      dischargeStatus: 'Active',
-    },
-    {
-      id: 2,
-      patient_id: 'P54321',
-      name: 'Jane Doe',
-      age: 25,
-      gender: 'Female',
-      aabhaId: 'A456',
-      aadharId: '987654321098',
-      emailId: 'jane.doe@example.com',
-      dateOfBirth: '1997-10-20',
-      emergencyContactNumber: '987-654-3210',
-      patientType: 'Emergency',
-      dischargeStatus: 'Discharged',
-    },
-    {
-      id: 3,
-      patient_id: 'P78901',
-      name: 'Alice Smith',
-      age: 40,
-      gender: 'Female',
-      aabhaId: 'A789',
-      aadharId: '456789012345',
-      emailId: 'alice.smith@example.com',
-      dateOfBirth: '1984-03-25',
-      emergencyContactNumber: '456-789-0123',
-      patientType: 'Regular',
-      dischargeStatus: 'Active',
-    },
-    {
-      id: 4,
-      patient_id: 'P98765',
-      name: 'Bob Johnson',
-      age: 35,
-      gender: 'Male',
-      aabhaId: 'A987',
-      aadharId: '345678901234',
-      emailId: 'bob.johnson@example.com',
-      dateOfBirth: '1989-08-10',
-      emergencyContactNumber: '345-678-9012',
-      patientType: 'Emergency',
-      dischargeStatus: 'Discharged',
-    },
-    {
-      id: 5,
-      patient_id: 'P24680',
-      name: 'Michael Williams',
-      age: 45,
-      gender: 'Male',
-      aabhaId: 'A246',
-      aadharId: '234567890123',
-      emailId: 'michael.williams@example.com',
-      dateOfBirth: '1979-11-30',
-      emergencyContactNumber: '234-567-8901',
-      patientType: 'Regular',
-      dischargeStatus: 'Active',
-    },
-    {
-      id: 6,
-      patient_id: 'P13579',
-      name: 'Emily Brown',
-      age: 28,
-      gender: 'Female',
-      aabhaId: 'A135',
-      aadharId: '123456789012',
-      emailId: 'emily.brown@example.com',
-      dateOfBirth: '1996-02-18',
-      emergencyContactNumber: '123-456-7890',
-      patientType: 'Emergency',
-      dischargeStatus: 'Discharged',
-    },
-  ];
-  const [records, setRecords] = useState<Patient[]>(patients);
 
+  const [records, setRecords] = useState<Patient[]>([]);
+  let auth = useRecoilValue(authState);
+  const route = useRoute();
+  const mode = useRoute().name.split('/')[2];
+  console.log(mode);
+  useEffect(() => {
+    const fetchPatients = async () => {
+      try {
+        const token = auth.token; // Retrieve the authorization token from Recoil state
+        const uname = auth.user_id;
+        const query_string =
+          (mode === 'indoorMode'
+            ? GET_INPATIENTS_BY_DOCTOR_ID
+            : GET_OUTPATIENTS_BY_DOCTOR_ID) + uname;
+        console.log(query_string);
+        const response = await axios.get(GET_INPATIENTS_BY_DOCTOR_ID + uname, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (response.status === 200) {
+          setPatient(response.data);
+        } else {
+          console.error('Failed to fetch patients:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error occurred while fetching patients:', error);
+      }
+    };
+
+    fetchPatients();
+  }, []);
   const handleView = (id: Patient) => {
     setPatientDetails(true);
     setPatient(id);
@@ -143,7 +81,7 @@ const Records = () => {
   };
 
   const handleAttend = (record: Patient) => {
-    navigate.navigate('/doctor/outdoorMode/attend', {record});
+    navigate.navigate(route.name + '/attend', {record});
   };
 
   return (

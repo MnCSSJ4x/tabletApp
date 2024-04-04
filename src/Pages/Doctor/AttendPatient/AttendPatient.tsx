@@ -4,7 +4,8 @@ import Navbar from '../Components/Navbar';
 import PatientInfo from './Components/PatientInfo';
 import Updates from './Components/Updates';
 import MainArea from './Components/MainArea';
-import colors from '../../../../../colors';
+import colors from '../../../../colors';
+import {useRoute} from '@react-navigation/native';
 
 const {width} = Dimensions.get('window');
 
@@ -25,6 +26,8 @@ interface Patient {
 
 const AttendPatient: React.FC = ({route}) => {
   const patientInfo: Patient = route.params['record'];
+  const mode = useRoute().name.split('/')[2];
+  console.log(mode);
 
   return (
     <View style={{flex: 1, backgroundColor: colors.ui02}}>

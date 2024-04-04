@@ -61,7 +61,7 @@ export const globalStyles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 16,
-    backgroundColor: colors.ui02
+    backgroundColor: colors.ui01
   },
   titleText: {
     fontSize: 24,

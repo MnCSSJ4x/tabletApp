@@ -35,8 +35,18 @@ const LoginForm = () => {
 
       if (response.status === 200) {
         const {token} = response.data;
-        setAuth({token});
-        navigation.navigate('Home');
+        const user_id: string = username;
+
+        setAuth({token, user_id});
+        navigation.navigate('Home', {type: 'Nurse'});
+        // const response2 = await axios.get('', {
+        //   headers: {
+        //     Authorization: `Bearer ${token}`,
+        //   },
+        // });
+        // if (response2.status === 200) {
+        //   navigation.navigate('Home', {type: response.data.type});
+        // }
       } else {
         setError('Invalid username or password. Please try again.');
       }
