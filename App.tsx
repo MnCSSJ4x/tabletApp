@@ -10,11 +10,11 @@ import ViewDoctors from './src/Pages/ShiftManager/Pages/ViewDoctors/ViewDoctors'
 import ViewNurses from './src/Pages/ShiftManager/Pages/ViewNurses/ViewNurses';
 import GiveAccess from './src/Pages/ShiftManager/Pages/ViewNurses/GiveAccess';
 import AddShift from './src/Pages/ShiftManager/Pages/ViewNurses/AddShift';
-import Outdoor from './src/Pages/Doctor/DoctorView';
 import {RecoilRoot} from 'recoil';
-import AttendPatient from './src/Pages/Doctor/AttendPatient/AttendPatient';
-import DoctorView from './src/Pages/Doctor/DoctorView';
-import NurseView from './src/Pages/Nurse/ViewPatients/NurseView';
+import AttendPatient from './src/Pages/Employee/ViewPatients/AttendPatient/AttendPatient';
+import EmployeeViewPatients from './src/Pages/Employee/ViewPatients/EmployeeViewPatients';
+import EmployeeViewNurses from './src/Pages/Employee/ViewNurses/EmployeeViewNurses';
+import EmployeeViewDoctors from './src/Pages/Employee/ViewDoctors/EmployeeViewDoctors';
 
 const Stack = createStackNavigator();
 const App = () => {
@@ -66,33 +66,52 @@ const App = () => {
             name="/doctor/outdoorMode/attend"
             component={AttendPatient}
             options={{headerShown: false}}
+            initialParams={{role: 'Doctor', mode: 'Outdoor'}}
           />
 
           <Stack.Screen
             name="/doctor/indoorMode/attend"
             component={AttendPatient}
             options={{headerShown: false}}
+            initialParams={{role: 'Doctor', mode: 'Indoor'}}
           />
           <Stack.Screen
             name="/doctor/indoorMode"
-            component={DoctorView}
+            component={EmployeeViewPatients}
             options={{headerShown: false}}
+            initialParams={{role: 'Doctor', type: 'InPatient'}}
           />
-          {/* <Stack.Screen
-          name="/doctor/indoorMode"
-          component={}
-          options={{headerShown: false}}
-        /> */}
           <Stack.Screen
             name="/doctor/outdoorMode"
-            component={DoctorView}
+            component={EmployeeViewPatients}
             options={{headerShown: false}}
+            initialParams={{role: 'Doctor', type: 'OutPatient'}}
           />
           <Stack.Screen
-            name="/nurse"
-            component={NurseView}
+            name="/nurse/viewPatients"
+            component={EmployeeViewPatients}
             options={{headerShown: false}}
+            initialParams={{role: 'Nurse'}}
           />
+          <Stack.Screen
+            name="/nurse/viewPatients/Attend"
+            component={AttendPatient}
+            options={{headerShown: false}}
+            initialParams={{role: 'Nurse'}}
+          />
+          <Stack.Screen
+            name="/nurse/viewDoctors"
+            component={EmployeeViewDoctors}
+            options={{headerShown: false}}
+            initialParams={{role: 'Nurse'}}
+          />
+          <Stack.Screen
+            name="/nurse/viewNurses"
+            component={EmployeeViewNurses}
+            options={{headerShown: false}}
+            initialParams={{role: 'Nurse'}}
+          />
+
           {/* <Stack.Screen
           name="/doctor/outOfOfficeMode"
           component={}

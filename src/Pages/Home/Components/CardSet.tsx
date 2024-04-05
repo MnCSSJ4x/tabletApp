@@ -12,10 +12,8 @@ const CardSet: React.FC = () => {
   const cards = getRoleBasedCards(role);
   const navigation = useNavigation();
   const handleCardClick = (route: string) => {
-    // Handle the click event for each card
     navigation.navigate(route);
     console.log(`Clicked on "${route}"`);
-    // You can add specific actions or navigation based on the clicked card
   };
 
   return (

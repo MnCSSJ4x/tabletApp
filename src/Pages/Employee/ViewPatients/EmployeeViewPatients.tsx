@@ -1,18 +1,20 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import Navbar from '../Home/Components/Navbar';
-import Title from '../Home/Components/Title';
+import Navbar from '../../Home/Components/Navbar';
+import Title from '../../Home/Components/Title';
 import Records from './Components/Records';
-import colors from '../../../colors';
+import colors from '../../../../colors';
 import {useNavigation} from '@react-navigation/native';
 import {useRoute} from '@react-navigation/native';
 
-const DoctorView = () => {
+const EmployeeViewPatients = () => {
+  const route = useRoute();
+  let role = route.params['role'];
   return (
     <View style={styles.container}>
       <Navbar></Navbar>
       <Title title="All Patients" />
-      <Records />
+      <Records role={role} />
     </View>
   );
 };
@@ -22,4 +24,4 @@ const styles = StyleSheet.create({
     backgroundColor: colors.ui02,
   },
 });
-export default DoctorView;
+export default EmployeeViewPatients;

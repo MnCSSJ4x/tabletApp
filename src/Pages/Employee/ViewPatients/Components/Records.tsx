@@ -16,11 +16,15 @@ import {useRecoilValue} from 'recoil';
 import {authState} from '../../../../Auth/atom';
 import axios from 'axios';
 import {
+  GET_ALL_INPATIENTS,
   GET_INPATIENTS_BY_DOCTOR_ID,
   GET_OUTPATIENTS_BY_DOCTOR_ID,
 } from '../../../../../routes';
-
-const Records = () => {
+interface RecordsProps {
+  role: string;
+}
+const Records: React.FC<RecordsProps> = ({role}) => {
+  console.log(role);
   const navigation = useNavigation();
   const [isPatientViewOpen, setPatientDetails] = useState(false);
   const [isPatientEditOpen, setPatientEdit] = useState(false);
@@ -33,17 +37,24 @@ const Records = () => {
   const route = useRoute();
   const mode = useRoute().name.split('/')[2];
   console.log(mode);
+
+  const uname = auth.user_id;
+  let query_string = '';
+  if (role === 'Nurse') {
+    query_string = GET_ALL_INPATIENTS;
+  } else if (role === 'Doctor') {
+    query_string =
+      (mode === 'indoorMode'
+        ? GET_INPATIENTS_BY_DOCTOR_ID
+        : GET_OUTPATIENTS_BY_DOCTOR_ID) + uname;
+  }
   useEffect(() => {
     const fetchPatients = async () => {
       try {
+        console.log('url: ', query_string);
         const token = auth.token; // Retrieve the authorization token from Recoil state
-        const uname = auth.user_id;
-        const query_string =
-          (mode === 'indoorMode'
-            ? GET_INPATIENTS_BY_DOCTOR_ID
-            : GET_OUTPATIENTS_BY_DOCTOR_ID) + uname;
-        console.log(query_string);
-        const response = await axios.get(GET_INPATIENTS_BY_DOCTOR_ID + uname, {
+
+        const response = await axios.get(query_string, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

@@ -2,16 +2,16 @@ import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import Modal from 'react-native-modal';
 import colors from '../../../../../colors';
-import Patient from './Patient';
+import Doctor from './Doctor';
 
-interface PatientDetailsProps {
-  patient: Patient;
+interface DoctorDetailsProps {
+  Doctor: Doctor;
   isOpen: boolean;
   onClose: () => void;
 }
 
-const PatientDetails: React.FC<PatientDetailsProps> = ({
-  patient,
+const DoctorDetails: React.FC<DoctorDetailsProps> = ({
+  Doctor,
   isOpen,
   onClose,
 }) => {
@@ -32,24 +32,37 @@ const PatientDetails: React.FC<PatientDetailsProps> = ({
               fontSize: 20,
               marginBottom: 16,
             }}>
-            Patient Details for {patient.patient_id}
+            Doctor Details for {Doctor.employeeId}
           </Text>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text style={{color: colors.text01}}>Patient ID:</Text>
-            <Text style={{color: colors.text02}}>{patient.patient_id}</Text>
+            <Text style={{color: colors.text01}}>Doctor ID:</Text>
+            <Text style={{color: colors.text02}}>{Doctor.employeeId}</Text>
           </View>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <Text style={{color: colors.text01}}>Name:</Text>
-            <Text style={{color: colors.text02}}>{patient.name}</Text>
+            <Text style={{color: colors.text02}}>{Doctor.name}</Text>
           </View>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text style={{color: colors.text01}}>Age:</Text>
-            <Text style={{color: colors.text02}}>{patient.age}</Text>
+            <Text style={{color: colors.text01}}>Date Of Birth:</Text>
+            <Text style={{color: colors.text02}}>{Doctor.dateOfBirth}</Text>
           </View>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <Text style={{color: colors.text01}}>Contact no: </Text>
+            <Text style={{color: colors.text02}}>{Doctor.contact}</Text>
+          </View>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <Text style={{color: colors.text01}}>Department</Text>
+            <Text style={{color: colors.text02}}>{Doctor.department}</Text>
+          </View>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <Text style={{color: colors.text01}}>Designation:</Text>
+            <Text style={{color: colors.text02}}>{Doctor.designation}</Text>
+          </View>
+
+          {/* <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <Text style={{color: colors.text01}}>Gender:</Text>
-            <Text style={{color: colors.text02}}>{patient.gender}</Text>
-          </View>
+            <Text style={{color: colors.text02}}>{Doctor.gender}</Text>
+          </View> */}
           <TouchableOpacity
             onPress={onClose}
             style={{
@@ -66,4 +79,4 @@ const PatientDetails: React.FC<PatientDetailsProps> = ({
   );
 };
 
-export default PatientDetails;
+export default DoctorDetails;

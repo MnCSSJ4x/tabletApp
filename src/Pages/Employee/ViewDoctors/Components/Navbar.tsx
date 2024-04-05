@@ -1,7 +1,7 @@
 // Navbar.tsx
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import colors from '../../../../colors';
+import colors from '../../../../../colors'; 
 
 const Navbar = () => {
   return (

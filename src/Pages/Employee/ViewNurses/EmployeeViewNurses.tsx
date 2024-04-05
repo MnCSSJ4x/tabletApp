@@ -4,7 +4,7 @@ import Title from './Components/Title';
 import Records from './Components/Records';
 import Navbar from './Components/Navbar';
 
-const ViewNurses = () => {
+const EmployeeViewNurses = () => {
   return (
     <View style={styles.container}>
       <Navbar></Navbar>
@@ -19,4 +19,4 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
-export default ViewNurses;
+export default EmployeeViewNurses;

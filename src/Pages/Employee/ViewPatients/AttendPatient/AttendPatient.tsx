@@ -4,7 +4,7 @@ import Navbar from '../Components/Navbar';
 import PatientInfo from './Components/PatientInfo';
 import Updates from './Components/Updates';
 import MainArea from './Components/MainArea';
-import colors from '../../../../colors';
+import colors from '../../../../../colors';
 import {useRoute} from '@react-navigation/native';
 
 const {width} = Dimensions.get('window');

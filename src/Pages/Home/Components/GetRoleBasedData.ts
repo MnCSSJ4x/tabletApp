@@ -42,7 +42,7 @@ const getRoleBasedCards = (role: Role): Card[] => {
           title: 'View/Attend Patient in Ward',
           clipart: '🛌',
           description: 'Click to view/attend patients in the ward.',
-          route: '/nurse/viewAttendPatients',
+          route: '/nurse/viewPatients',
         },
         {
           title: 'View Doctors in Assigned Ward',

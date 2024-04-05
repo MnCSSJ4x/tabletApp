@@ -4,11 +4,11 @@ import Title from './Components/Title';
 import Records from './Components/Records';
 import Navbar from './Components/Navbar';
 
-const ViewNurses = () => {
+const EmployeeViewDoctors = () => {
   return (
     <View style={styles.container}>
       <Navbar></Navbar>
-      <Title title="Nurses" />
+      <Title title="Doctors" />
       <Records />
     </View>
   );
@@ -19,4 +19,4 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
-export default ViewNurses;
+export default EmployeeViewDoctors;
