@@ -7,9 +7,19 @@ import getRoleBasedCards from './GetRoleBasedData';
 
 const CardSet: React.FC = () => {
   const route = useRoute();
-  console.log(route.params);
   const role = route.params['type'];
-  const cards = getRoleBasedCards(role);
+  let roleActual = '';
+  if (role === 'DOCTOR') {
+    roleActual = 'PracticingDoctor';
+  }
+  if (role === 'NURSE') {
+    roleActual = 'Nurse';
+  }
+  if (role === 'HEAD_NURSE') {
+    roleActual = 'ShiftManager';
+  }
+  
+  const cards = getRoleBasedCards(roleActual);
   const navigation = useNavigation();
   const handleCardClick = (route: string) => {
     navigation.navigate(route);

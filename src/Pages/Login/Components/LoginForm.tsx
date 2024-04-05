@@ -37,23 +37,23 @@ const LoginForm = () => {
         const {token} = response.data;
         const user_id: string = username;
         setAuth({token, user_id});
-        // try {
-        //   // console.log(GET_EMPLOYEE_BY_ID + user_id);
-        //   // console.log('token: ', token);
-        //   const response2 = await axios.get(GET_EMPLOYEE_BY_ID + user_id, {
-        //     headers: {
-        //       Authorization: `Bearer ${token}`,
-        //     },
-        //   });
-        //   if (response2.status === 200) {
-        //     console.log(response.data);
-        //     navigation.navigate('Home', {type: response2.data['employeeType']});
-        //   }
-        // } catch (error) {
-        //   console.error('Error occurred during login:', error);
-        //   setError('An error occurred in Retriving Role');
-        // }
-        navigation.navigate('Home', {type: 'PracticingDoctor'});
+        try {
+          // console.log(GET_EMPLOYEE_BY_ID + user_id);
+          // console.log('token: ', token);
+          const response2 = await axios.get(GET_EMPLOYEE_BY_ID + user_id, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          if (response2.status === 200) {
+            // console.log(response.data);
+            navigation.navigate('Home', {type: response2.data['employeeType']});
+          }
+        } catch (error) {
+          console.error('Error occurred during login:', error);
+          setError('An error occurred in Retriving Role');
+        }
+        // navigation.navigate('Home', {type: 'PracticingDoctor'});
       }
     } catch (error) {
       console.error('Error occurred during login:', error);
