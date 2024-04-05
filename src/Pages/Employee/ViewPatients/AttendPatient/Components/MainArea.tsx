@@ -15,7 +15,7 @@ const EditableInput = ({title, initialValue, onSave}) => {
 
   const handleSave = () => {
     onSave(value);
-    setIsEditing(false);
+    // setIsEditing(false);
   };
 
   return (
@@ -33,7 +33,10 @@ const EditableInput = ({title, initialValue, onSave}) => {
       )}
       <TouchableOpacity
         style={styles.buttonContainer}
-        onPress={() => setIsEditing(!isEditing)}>
+        onPress={() => {
+          setIsEditing(!isEditing);
+          handleSave();
+        }}>
         <Text style={styles.buttonText}>{isEditing ? 'Confirm' : 'Edit'}</Text>
       </TouchableOpacity>
     </View>
@@ -41,6 +44,7 @@ const EditableInput = ({title, initialValue, onSave}) => {
 };
 
 const MainArea = () => {
+  //input1: Prescription, input2: Test(s) if needed, input3: Doctor's Comments
   const [input1, setInput1] = useState('');
   const [input2, setInput2] = useState('');
   const [input3, setInput3] = useState('');

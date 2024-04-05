@@ -6,23 +6,9 @@ import Updates from './Components/Updates';
 import MainArea from './Components/MainArea';
 import colors from '../../../../../colors';
 import {useRoute} from '@react-navigation/native';
+import Patient from '../Components/Patient';
 
 const {width} = Dimensions.get('window');
-
-interface Patient {
-  id: number;
-  patient_id: string;
-  name: string;
-  age: number;
-  gender: string;
-  aabhaId: string;
-  aadharId: string;
-  emailId: string;
-  dateOfBirth: string;
-  emergencyContactNumber: string;
-  patientType: string;
-  dischargeStatus: string;
-}
 
 const AttendPatient: React.FC = ({route}) => {
   const patientInfo: Patient = route.params['record'];

@@ -6,6 +6,7 @@ const GET_ALL_NURSES: string = BASE_URL + 'employee/getAllNurses'
 const GET_ALL_DOCTORS: string = BASE_URL + 'employee/getAllDoctors'
 const GET_OUTPATIENTS_BY_DOCTOR_ID: string = BASE_URL + 'patientDoctor/getAllOutpatientsByDoctorID/'
 const GET_INPATIENTS_BY_DOCTOR_ID: string = BASE_URL + 'patientDoctor/getAllInpatientsByDoctorID/'
+const GET_EMPLOYEE_BY_ID: string = BASE_URL+'employee/'
 
 export  {BASE_AUTH_URL, 
     BASE_URL,
@@ -14,4 +15,5 @@ export  {BASE_AUTH_URL,
     GET_ALL_NURSES, 
     GET_ALL_DOCTORS, 
     GET_INPATIENTS_BY_DOCTOR_ID, 
-    GET_OUTPATIENTS_BY_DOCTOR_ID} 
+    GET_OUTPATIENTS_BY_DOCTOR_ID,
+    GET_EMPLOYEE_BY_ID} 

@@ -2,27 +2,15 @@ import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import Title from '../../Components/Title';
 import colors from '../../../../../../colors';
-interface Patient {
-  id: number;
-  patient_id: string;
-  name: string;
-  age: number;
-  gender: string;
-  aabhaId: string;
-  aadharId: string;
-  emailId: string;
-  dateOfBirth: string;
-  emergencyContactNumber: string;
-  patientType: string;
-  dischargeStatus: string;
-}
+import Patient from '../../Components/Patient';
+
 interface PatientProps {
   info: Patient;
 }
 
 const PatientInfo: React.FC<PatientProps> = ({info}) => {
-  let titleString = 'Patient ID: ' + info.patient_id;
-  console.log(titleString);
+  let titleString = 'Patient ID: ' + info.patientId;
+  // console.log(titleString);
   return (
     <View>
       <View style={{paddingBottom: 12}}>
@@ -37,13 +25,7 @@ const PatientInfo: React.FC<PatientProps> = ({info}) => {
           <Text style={{color: colors.text01}}>{info.name}</Text>
         </View>
 
-        <View style={styles.textContainer}>
-          <Text style={{color: colors.text01, fontWeight: 'bold'}}>
-            {' '}
-            Patient ID:{' '}
-          </Text>
-          <Text style={{color: colors.text01}}>{info.patient_id}</Text>
-        </View>
+        <View style={styles.textContainer}></View>
       </View>
     </View>
   );

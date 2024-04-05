@@ -28,7 +28,7 @@ const Records: React.FC<RecordsProps> = ({role}) => {
   const navigation = useNavigation();
   const [isPatientViewOpen, setPatientDetails] = useState(false);
   const [isPatientEditOpen, setPatientEdit] = useState(false);
-  const [patientSelected, setPatient] = useState<Patient>();
+  const [patientSelected, setPatientSelected] = useState<Patient>();
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigation();
 
@@ -52,6 +52,7 @@ const Records: React.FC<RecordsProps> = ({role}) => {
     const fetchPatients = async () => {
       try {
         console.log('url: ', query_string);
+        console.log('token: ', auth.token);
         const token = auth.token; // Retrieve the authorization token from Recoil state
 
         const response = await axios.get(query_string, {
@@ -60,7 +61,9 @@ const Records: React.FC<RecordsProps> = ({role}) => {
           },
         });
         if (response.status === 200) {
-          setPatient(response.data);
+          setRecords(response.data);
+        } else if (response.status === 204) {
+          setRecords([]);
         } else {
           console.error('Failed to fetch patients:', response.statusText);
         }
@@ -73,7 +76,7 @@ const Records: React.FC<RecordsProps> = ({role}) => {
   }, []);
   const handleView = (id: Patient) => {
     setPatientDetails(true);
-    setPatient(id);
+    setPatientSelected(id);
     console.log(`Viewing details of patient with ID: ${id}`);
   };
 
@@ -104,24 +107,26 @@ const Records: React.FC<RecordsProps> = ({role}) => {
         onChangeText={handleSearchChange}
       />
       <ScrollView contentContainerStyle={styles.gridContainer}>
-        {filteredRecords.map(record => (
-          <View key={record.id} style={styles.recordContainer}>
-            <Text style={styles.recordTitle}>{record.name}</Text>
-            <View style={styles.recordDetails}>
-              <Text style={{color: colors.text02}}>Age: {record.age}</Text>
-              <Text style={{color: colors.text02}}>
-                Gender: {record.gender}
-              </Text>
+        {filteredRecords &&
+          filteredRecords.map(record => (
+            <View key={record.id} style={styles.recordContainer}>
+              <Text style={styles.recordTitle}>{record.name}</Text>
+              <View style={styles.recordDetails}>
+                <Text style={{color: colors.text02}}>Age: {record.age}</Text>
+                <Text style={{color: colors.text02}}>
+                  Gender: {record.gender}
+                </Text>
+              </View>
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  style={styles.viewButton}
+                  onPress={() => handleAttend(record)}>
+                  <Text style={styles.buttonText}>Attend</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                style={styles.viewButton}
-                onPress={() => handleAttend(record)}>
-                <Text style={styles.buttonText}>Attend</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        ))}
+          ))}
+        {filteredRecords.length === 0 && <Text>No records found</Text>}
       </ScrollView>
       <View style={styles.buttonWrapper}>
         <Button title="Back" onPress={navigateBack} color="#0f62fe" />

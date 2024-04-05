@@ -1,4 +1,5 @@
 interface Patient {
+    patientId: string;
     id: number;
     patient_id: string;
     name: string;

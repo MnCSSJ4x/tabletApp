@@ -11,7 +11,7 @@ import {useRecoilState} from 'recoil';
 import {authState} from '../../../Auth/atom';
 import colors from '../../../../colors';
 import {useNavigation} from '@react-navigation/native';
-import {LOGIN} from '../../../../routes';
+import {GET_EMPLOYEE_BY_ID, LOGIN} from '../../../../routes';
 import axios from 'axios';
 const LoginForm = () => {
   const [username, setUsername] = useState('');
@@ -36,25 +36,29 @@ const LoginForm = () => {
       if (response.status === 200) {
         const {token} = response.data;
         const user_id: string = username;
-
         setAuth({token, user_id});
-        navigation.navigate('Home', {type: 'Nurse'});
-        // const response2 = await axios.get('', {
-        //   headers: {
-        //     Authorization: `Bearer ${token}`,
-        //   },
-        // });
-        // if (response2.status === 200) {
-        //   navigation.navigate('Home', {type: response.data.type});
+        // try {
+        //   // console.log(GET_EMPLOYEE_BY_ID + user_id);
+        //   // console.log('token: ', token);
+        //   const response2 = await axios.get(GET_EMPLOYEE_BY_ID + user_id, {
+        //     headers: {
+        //       Authorization: `Bearer ${token}`,
+        //     },
+        //   });
+        //   if (response2.status === 200) {
+        //     console.log(response.data);
+        //     navigation.navigate('Home', {type: response2.data['employeeType']});
+        //   }
+        // } catch (error) {
+        //   console.error('Error occurred during login:', error);
+        //   setError('An error occurred in Retriving Role');
         // }
-      } else {
-        setError('Invalid username or password. Please try again.');
+        navigation.navigate('Home', {type: 'PracticingDoctor'});
       }
     } catch (error) {
       console.error('Error occurred during login:', error);
       setError('An error occurred. Please try again later.');
     }
-    // navigation.navigate('Home');
   };
 
   const handleForgotPassword = () => {
