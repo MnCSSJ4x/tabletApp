@@ -1,5 +1,5 @@
 import {Dimensions, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Navbar from '../Components/Navbar';
 import PatientInfo from './Components/PatientInfo';
 import Updates from './Components/Updates';
@@ -7,14 +7,50 @@ import MainArea from './Components/MainArea';
 import colors from '../../../../../colors';
 import {useRoute} from '@react-navigation/native';
 import Patient from '../Components/Patient';
+import {authState} from '../../../../Auth/atom';
+import {useRecoilValue} from 'recoil';
+import axios from 'axios';
+import {GET_EMR_BY_PATIENT_ID} from '../../../../../routes';
 
 const {width} = Dimensions.get('window');
 
 const AttendPatient: React.FC = ({route}) => {
   const patientInfo: Patient = route.params['record'];
   const mode = useRoute().name.split('/')[2];
+  const auth = useRecoilValue(authState);
+  const [feedback, setFeedback] = useState([]);
   console.log(mode);
-
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = auth.token;
+        console.log(GET_EMR_BY_PATIENT_ID + patientInfo.patientId);
+        const response = await axios.get(
+          GET_EMR_BY_PATIENT_ID + patientInfo.patientId,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+        if (response.status === 200) {
+          console.log(response);
+          setFeedback(response.data);
+        } else if (response.status === 204) {
+          setFeedback([]);
+        } else {
+          console.error(
+            'Failed to fetch record for patient',
+            response.statusText,
+          );
+        }
+      } catch (error) {
+        console.error('Failed to fetch record for patiet', error);
+      }
+    };
+    fetchData();
+  }, []);
+  console.log(feedback);
   return (
     <View style={{flex: 1, backgroundColor: colors.ui02}}>
       <Navbar />

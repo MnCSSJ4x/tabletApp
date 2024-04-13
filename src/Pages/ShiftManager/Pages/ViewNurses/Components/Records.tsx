@@ -127,17 +127,17 @@ const Records = () => {
                 onPress={() => handleView(record)}>
                 <Text style={styles.buttonText}>View</Text>
               </TouchableOpacity>
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={styles.viewButton}
                 onPress={() => handleGrantAccess(record)}>
                 <Text style={styles.buttonText}>Grant HIS Access</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               {
-                <TouchableOpacity
-                  style={styles.viewButton}
-                  onPress={() => handleDuty(record)}>
-                  <Text style={styles.buttonText}>Give Duty</Text>
-                </TouchableOpacity>
+                // <TouchableOpacity
+                //   style={styles.viewButton}
+                //   onPress={() => handleDuty(record)}>
+                //   <Text style={styles.buttonText}>Give Duty</Text>
+                // </TouchableOpacity>
               }
             </View>
           </View>

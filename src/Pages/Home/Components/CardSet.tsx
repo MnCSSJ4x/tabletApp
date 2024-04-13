@@ -9,16 +9,17 @@ const CardSet: React.FC = () => {
   const route = useRoute();
   const role = route.params['type'];
   let roleActual = '';
+  console.log('Role:', role);
   if (role === 'DOCTOR') {
     roleActual = 'PracticingDoctor';
   }
   if (role === 'NURSE') {
     roleActual = 'Nurse';
   }
-  if (role === 'HEAD_NURSE') {
+  if (role === 'HEAD_NURSE' || role === 'ADMIN') {
     roleActual = 'ShiftManager';
   }
-  
+
   const cards = getRoleBasedCards(roleActual);
   const navigation = useNavigation();
   const handleCardClick = (route: string) => {

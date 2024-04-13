@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -8,6 +8,11 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import colors from '../../../../../../colors';
+import {useRecoilValue} from 'recoil';
+import {authState} from '../../../../../Auth/atom';
+import axios from 'axios';
+import {GET_EMR_BY_PATIENT_ID} from '../../../../../../routes';
+import VoiceToText from './VoiceToText';
 
 const EditableInput = ({title, initialValue, onSave}) => {
   const [value, setValue] = useState(initialValue);
@@ -31,14 +36,19 @@ const EditableInput = ({title, initialValue, onSave}) => {
       ) : (
         <Text style={styles.input}>{value}</Text>
       )}
-      <TouchableOpacity
-        style={styles.buttonContainer}
-        onPress={() => {
-          setIsEditing(!isEditing);
-          handleSave();
-        }}>
-        <Text style={styles.buttonText}>{isEditing ? 'Confirm' : 'Edit'}</Text>
-      </TouchableOpacity>
+      <View style={{flex: 0.4, flexDirection: 'row', gap: 40}}>
+        <TouchableOpacity
+          style={styles.buttonContainer}
+          onPress={() => {
+            setIsEditing(!isEditing);
+            handleSave();
+          }}>
+          <Text style={styles.buttonText}>
+            {isEditing ? 'Confirm' : 'Edit'}
+          </Text>
+        </TouchableOpacity>
+        {isEditing ? <VoiceToText setText={setValue}></VoiceToText> : <></>}
+      </View>
     </View>
   );
 };
@@ -131,12 +141,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   buttonContainer: {
-    flex: 0.4,
+    flex: 0.5,
     paddingHorizontal: 20,
     justifyContent: 'center',
     backgroundColor: colors.interactive01,
     borderRadius: 8,
-    marginRight: 200,
+    // marginRight: 200,
   },
   buttonText: {
     color: colors.ui02,
