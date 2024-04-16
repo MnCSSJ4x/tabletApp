@@ -8,7 +8,11 @@ const GET_ALL_DOCTORS: string = BASE_URL + 'employee/getAllDoctors'
 const GET_OUTPATIENTS_BY_DOCTOR_ID: string = BASE_URL + 'patientDoctor/getAllOutpatientsByDoctorID/'
 const GET_INPATIENTS_BY_DOCTOR_ID: string = BASE_URL + 'patientDoctor/getAllInpatientsByDoctorID/'
 const GET_EMPLOYEE_BY_ID: string = BASE_URL+'employee/'
-const GET_EMR_BY_PATIENT_ID: string = BASE_EMR_URL+'emr/getEmrByPatientId/'
+const GET_EMR_BY_EMRID: string = BASE_EMR_URL+'emr/getEmrByEmrIdText/'
+const PUT_EMR_BY_PATIENT_ID: string = BASE_EMR_URL+'emr/updateEmrByIdText/'
+const GET_EMRID_BY_PATIENT_DOCTOR_ID: string = BASE_EMR_URL+'consultation/getEmrIdByPatientIdAndDoctorId'
+const UPDATE_EMR_BY_EMR_ID: string = BASE_EMR_URL+'emr/updateEmrByIdText'
+
 
 export  {BASE_AUTH_URL, 
     BASE_URL,
@@ -19,4 +23,7 @@ export  {BASE_AUTH_URL,
     GET_INPATIENTS_BY_DOCTOR_ID, 
     GET_OUTPATIENTS_BY_DOCTOR_ID,
     GET_EMPLOYEE_BY_ID,
-    GET_EMR_BY_PATIENT_ID} 
+    GET_EMR_BY_EMRID,
+    PUT_EMR_BY_PATIENT_ID,
+    GET_EMRID_BY_PATIENT_DOCTOR_ID,
+    UPDATE_EMR_BY_EMR_ID} 

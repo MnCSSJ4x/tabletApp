@@ -11,16 +11,21 @@ import colors from '../../../../../../colors';
 import {useRecoilValue} from 'recoil';
 import {authState} from '../../../../../Auth/atom';
 import axios from 'axios';
-import {GET_EMR_BY_PATIENT_ID} from '../../../../../../routes';
+import {
+  GET_EMR_BY_PATIENT_ID,
+  UPDATE_EMRID_BY_ID,
+  UPDATE_EMR_BY_EMR_ID,
+} from '../../../../../../routes';
 import VoiceToText from './VoiceToText';
+import Patient from '../../Components/Patient';
 
 const EditableInput = ({title, initialValue, onSave}) => {
   const [value, setValue] = useState(initialValue);
+  console.log(value);
   const [isEditing, setIsEditing] = useState(false);
 
   const handleSave = () => {
     onSave(value);
-    // setIsEditing(false);
   };
 
   return (
@@ -52,18 +57,49 @@ const EditableInput = ({title, initialValue, onSave}) => {
     </View>
   );
 };
-
-const MainArea = () => {
+interface PatientProps {
+  info: Patient;
+  emrId: string;
+  record: any;
+}
+const MainArea: React.FC<PatientProps> = ({info, emrId, record}) => {
+  console.log('Record:', record);
   //input1: Prescription, input2: Test(s) if needed, input3: Doctor's Comments
-  const [input1, setInput1] = useState('');
-  const [input2, setInput2] = useState('');
-  const [input3, setInput3] = useState('');
-
-  const handleSave = () => {
-    // Dummy API call to save inputs
-    console.log('Input 1:', input1);
-    console.log('Input 2:', input2);
-    console.log('Input 3:', input3);
+  const [input1, setInput1] = useState(record['Prescriptions']);
+  const [input2, setInput2] = useState(record['Tests']);
+  const [input3, setInput3] = useState(record['Comments']);
+  const auth = useRecoilValue(authState);
+  console.log('Input 1:', input1);
+  console.log('Input 2:', input2);
+  console.log('Input 3:', input3);
+  const handleSave = async () => {
+    const token = auth.token;
+    const url = UPDATE_EMR_BY_EMR_ID;
+    // console.log('Input 1:', input1);
+    // console.log('Input 2:', input2);
+    // console.log('Input 3:', input3);
+    // console.log('EMRID:', emrId);
+    const formDataToSend = new FormData();
+    formDataToSend.append('publicEmrId', emrId);
+    formDataToSend.append('patientId', info.patientId);
+    formDataToSend.append('prescription', input1);
+    formDataToSend.append('comments', input3);
+    formDataToSend.append('tests', input2);
+    formDataToSend.append('accessDepartments', '');
+    formDataToSend.append('accessList', '');
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    axios
+      .put(url, formDataToSend, config)
+      .then(response => {
+        console.log(response);
+      })
+      .catch(error => {
+        console.error(error);
+      });
     // Replace the console logs with actual API calls
   };
 

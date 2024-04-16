@@ -4,6 +4,8 @@ import {View, Text, TouchableOpacity} from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {globalStyles} from '../styles';
 import getRoleBasedCards from './GetRoleBasedData';
+import {authState} from '../../../Auth/atom';
+import {useRecoilValue} from 'recoil';
 
 const CardSet: React.FC = () => {
   const route = useRoute();
@@ -19,7 +21,8 @@ const CardSet: React.FC = () => {
   if (role === 'HEAD_NURSE' || role === 'ADMIN') {
     roleActual = 'ShiftManager';
   }
-
+  let auth = useRecoilValue(authState);
+  console.log(auth.token);
   const cards = getRoleBasedCards(roleActual);
   const navigation = useNavigation();
   const handleCardClick = (route: string) => {

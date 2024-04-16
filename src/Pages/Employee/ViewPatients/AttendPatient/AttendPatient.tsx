@@ -10,34 +10,41 @@ import Patient from '../Components/Patient';
 import {authState} from '../../../../Auth/atom';
 import {useRecoilValue} from 'recoil';
 import axios from 'axios';
-import {GET_EMR_BY_PATIENT_ID} from '../../../../../routes';
+import {
+  GET_EMRID_BY_PATIENT_DOCTOR_ID,
+  GET_EMR_BY_EMRID,
+} from '../../../../../routes';
 
 const {width} = Dimensions.get('window');
 
 const AttendPatient: React.FC = ({route}) => {
   const patientInfo: Patient = route.params['record'];
+  const [emrId, setEmrId] = useState(null);
   const mode = useRoute().name.split('/')[2];
   const auth = useRecoilValue(authState);
-  const [feedback, setFeedback] = useState([]);
+  const [feedback, setFeedback] = useState({});
   console.log(mode);
   useEffect(() => {
     const fetchData = async () => {
       try {
         const token = auth.token;
-        console.log(GET_EMR_BY_PATIENT_ID + patientInfo.patientId);
-        const response = await axios.get(
-          GET_EMR_BY_PATIENT_ID + patientInfo.patientId,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+        // console.log(GET_EMR_BY_PATIENT_ID + patientInfo.patientId);
+        const response = await axios.get(GET_EMRID_BY_PATIENT_DOCTOR_ID, {
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
-        );
+          params: {
+            patientId: patientInfo.patientId,
+            doctorId: auth.user_id,
+          },
+        });
         if (response.status === 200) {
-          console.log(response);
-          setFeedback(response.data);
+          console.log('Found emr id');
+          console.log(response.data);
+          setEmrId(response.data);
         } else if (response.status === 204) {
-          setFeedback([]);
+          console.log('No emr for id found');
+          setFeedback({});
         } else {
           console.error(
             'Failed to fetch record for patient',
@@ -45,12 +52,40 @@ const AttendPatient: React.FC = ({route}) => {
           );
         }
       } catch (error) {
-        console.error('Failed to fetch record for patiet', error);
+        console.error('Failed to fetch record for patient', error);
       }
     };
     fetchData();
   }, []);
-  console.log(feedback);
+  useEffect(() => {
+    const fetchEMR = async () => {
+      try {
+        const token = auth.token;
+        const response = await axios.get(GET_EMR_BY_EMRID + emrId, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (response.status === 200) {
+          console.log('SUCCESS for getting emr');
+          setFeedback(response.data);
+        } else if (response.status === 204) {
+          console.log('No emr for id found');
+          setFeedback({});
+        } else {
+          console.error(
+            'Failed to fetch record for patient',
+            response.statusText,
+          );
+        }
+      } catch (error) {
+        console.error('Failed to fetch EMR for EMRID', error);
+      }
+    };
+    if (emrId) {
+      fetchEMR();
+    }
+  }, [emrId]);
   return (
     <View style={{flex: 1, backgroundColor: colors.ui02}}>
       <Navbar />
@@ -69,7 +104,9 @@ const AttendPatient: React.FC = ({route}) => {
       <View style={styles.container}>
         <View style={styles.rectanglesContainer}>
           <View style={styles.rectangle1}>
-            <MainArea />
+            {Object.keys(feedback).length > 0 && (
+              <MainArea info={patientInfo} emrId={emrId} record={feedback} />
+            )}
           </View>
           <View style={styles.rectangle2}>
             <Updates />

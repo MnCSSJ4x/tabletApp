@@ -29,10 +29,10 @@ const VoiceToText = props => {
   };
   const startRecording = async () => {
     try {
-      const options = {
-        EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS: 10000,
-      };
-      await Voice.start('en_US', options);
+      // const options = {
+      //   EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS: 1000,
+      // };
+      await Voice.start('en_US');
       setmicOn(true);
     } catch (error) {
       console.error(error);
