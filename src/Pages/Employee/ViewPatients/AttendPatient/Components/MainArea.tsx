@@ -11,14 +11,10 @@ import colors from '../../../../../../colors';
 import {useRecoilValue} from 'recoil';
 import {authState} from '../../../../../Auth/atom';
 import axios from 'axios';
-import {
-  GET_EMR_BY_PATIENT_ID,
-  UPDATE_EMRID_BY_ID,
-  UPDATE_EMR_BY_EMR_ID,
-} from '../../../../../../routes';
+import {UPDATE_EMR_BY_EMR_ID} from '../../../../../../routes';
 import VoiceToText from './VoiceToText';
 import Patient from '../../Components/Patient';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const EditableInput = ({title, initialValue, onSave}) => {
   const [value, setValue] = useState(initialValue);
   console.log(value);
@@ -73,7 +69,7 @@ const MainArea: React.FC<PatientProps> = ({info, emrId, record}) => {
   console.log('Input 2:', input2);
   console.log('Input 3:', input3);
   const handleSave = async () => {
-    const token = auth.token;
+    const token = await AsyncStorage.getItem('token');
     const url = UPDATE_EMR_BY_EMR_ID;
     // console.log('Input 1:', input1);
     // console.log('Input 2:', input2);

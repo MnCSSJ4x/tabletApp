@@ -8,6 +8,7 @@ import {
   Button,
   StyleSheet,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import colors from '../../../../../colors';
 import {useNavigation} from '@react-navigation/native';
 import DoctorDetails from './DoctorDetails';
@@ -28,7 +29,7 @@ const Records = () => {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const token = auth.token;
+        const token = await AsyncStorage.getItem('token');
         const response = await axios.get(GET_ALL_DOCTORS, {
           headers: {
             Authorization: `Bearer ${token}`,

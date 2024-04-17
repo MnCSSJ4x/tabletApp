@@ -23,6 +23,7 @@ import {
 interface RecordsProps {
   role: string;
 }
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const Records: React.FC<RecordsProps> = ({role}) => {
   console.log(role);
   const navigation = useNavigation();
@@ -51,10 +52,8 @@ const Records: React.FC<RecordsProps> = ({role}) => {
   useEffect(() => {
     const fetchPatients = async () => {
       try {
-        console.log('url: ', query_string);
-        console.log('token: ', auth.token);
-        const token = auth.token; // Retrieve the authorization token from Recoil state
-
+        const token = await AsyncStorage.getItem('token');
+  
         const response = await axios.get(query_string, {
           headers: {
             Authorization: `Bearer ${token}`,

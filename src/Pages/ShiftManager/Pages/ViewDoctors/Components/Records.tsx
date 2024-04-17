@@ -16,6 +16,7 @@ import {useRecoilValue} from 'recoil';
 import {authState} from '../../../../../Auth/atom';
 import axios from 'axios';
 import {GET_ALL_DOCTORS} from '../../../../../../routes';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const Records = () => {
   const navigation = useNavigation();
   const [isDoctorViewOpen, setDoctorDetails] = useState(false);
@@ -28,7 +29,7 @@ const Records = () => {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const token = auth.token;
+        const token = await AsyncStorage.getItem('token');
         const response = await axios.get(GET_ALL_DOCTORS, {
           headers: {
             Authorization: `Bearer ${token}`,

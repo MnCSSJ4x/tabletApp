@@ -12,6 +12,8 @@ import {authState} from '../../../Auth/atom';
 import colors from '../../../../colors';
 import {useNavigation} from '@react-navigation/native';
 import {GET_EMPLOYEE_BY_ID, LOGIN} from '../../../../routes';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import axios from 'axios';
 const LoginForm = () => {
   const [username, setUsername] = useState('');
@@ -32,11 +34,12 @@ const LoginForm = () => {
         uuid: username,
         password: password,
       });
-
+      
       if (response.status === 200) {
         const {token} = response.data;
         const user_id: string = username;
-        setAuth({token, user_id});
+        await AsyncStorage.setItem('token', token);
+        setAuth({user_id});
         try {
           // console.log(GET_EMPLOYEE_BY_ID + user_id);
           // console.log('token: ', token);

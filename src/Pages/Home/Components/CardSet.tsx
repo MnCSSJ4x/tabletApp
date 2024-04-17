@@ -21,8 +21,6 @@ const CardSet: React.FC = () => {
   if (role === 'HEAD_NURSE' || role === 'ADMIN') {
     roleActual = 'ShiftManager';
   }
-  let auth = useRecoilValue(authState);
-  console.log(auth.token);
   const cards = getRoleBasedCards(roleActual);
   const navigation = useNavigation();
   const handleCardClick = (route: string) => {

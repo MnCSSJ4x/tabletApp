@@ -9,6 +9,7 @@ import {useRoute} from '@react-navigation/native';
 import Patient from '../Components/Patient';
 import {authState} from '../../../../Auth/atom';
 import {useRecoilValue} from 'recoil';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {
   GET_EMRID_BY_PATIENT_DOCTOR_ID,
@@ -27,8 +28,7 @@ const AttendPatient: React.FC = ({route}) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = auth.token;
-        // console.log(GET_EMR_BY_PATIENT_ID + patientInfo.patientId);
+        const token = await AsyncStorage.getItem('token');
         const response = await axios.get(GET_EMRID_BY_PATIENT_DOCTOR_ID, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -60,7 +60,7 @@ const AttendPatient: React.FC = ({route}) => {
   useEffect(() => {
     const fetchEMR = async () => {
       try {
-        const token = auth.token;
+        const token = await AsyncStorage.getItem('token');
         const response = await axios.get(GET_EMR_BY_EMRID + emrId, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -86,6 +86,7 @@ const AttendPatient: React.FC = ({route}) => {
       fetchEMR();
     }
   }, [emrId]);
+  console.log(feedback);
   return (
     <View style={{flex: 1, backgroundColor: colors.ui02}}>
       <Navbar />

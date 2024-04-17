@@ -16,7 +16,7 @@ import axios from 'axios';
 import {useRecoilValue} from 'recoil';
 import {GET_ALL_INPATIENTS} from '../../../../../../routes';
 import Patient from './Patient';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const Records = () => {
   const navigation = useNavigation();
   const [isPatientViewOpen, setPatientDetails] = useState(false);
@@ -46,7 +46,7 @@ const Records = () => {
   useEffect(() => {
     const fetchPatients = async () => {
       try {
-        const token = auth.token; // Retrieve the authorization token from Recoil state
+        const token = await AsyncStorage.getItem('token'); // Retrieve the authorization token from Recoil state
         const response = await axios.get(GET_ALL_INPATIENTS, {
           headers: {
             Authorization: `Bearer ${token}`,
