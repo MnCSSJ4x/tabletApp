@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, ScrollView, StyleSheet} from 'react-native';
 import Title from './Components/Title';
 import Records from './Components/Records';
-import Navbar from './Components/Navbar';
+import Navbar from '../../Navbar';
 
 const EmployeeViewDoctors = () => {
   return (

@@ -1,17 +1,12 @@
 // Navbar.tsx
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import colors from '../../../../colors'; // Adjust the path accordingly
 
 const Navbar = () => {
   return (
     <View style={styles.navbar}>
       <Text style={styles.logo}>HealthPlus</Text>
-      <View style={styles.navLinks}>
-        <Text style={styles.navLink}>Home</Text>
-        <Text style={styles.navLink}>About</Text>
-        <Text style={styles.navLink}>Help</Text>
-      </View>
     </View>
   );
 };

@@ -1,6 +1,6 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import Navbar from '../../Home/Components/Navbar';
+import Navbar from '../../Navbar';
 import Title from '../../Home/Components/Title';
 import Records from './Components/Records';
 import colors from '../../../../colors';

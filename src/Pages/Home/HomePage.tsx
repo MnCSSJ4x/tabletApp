@@ -1,7 +1,7 @@
 // HomePage.tsx
 import React from 'react';
 import {View} from 'react-native';
-import Navbar from './Components/Navbar';
+import Navbar from '../Navbar';
 import CardSet from './Components/CardSet';
 import {globalStyles} from './styles';
 

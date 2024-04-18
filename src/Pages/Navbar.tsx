@@ -1,11 +1,13 @@
 // Navbar.tsx
 import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
-import {globalStyles} from '../styles';
+import {globalStyles} from './styles';
+import {authState} from '../Auth/atom';
+import {useRecoilValue} from 'recoil';
 
 const Navbar: React.FC = () => {
-  const name = 'John Doe';
-
+  const auth = useRecoilValue(authState);
+  const name = auth.user_id;
   const handleLogout = () => {
     // Implement your logout logic here
     console.log('Logout button pressed');
@@ -23,9 +25,15 @@ const Navbar: React.FC = () => {
           style={globalStyles.navbarButton}>
           <Text style={globalStyles.navbarButtonText}>Logout</Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          onPress={handleLogout}
+          style={globalStyles.navbarButton}>
+          <Text style={globalStyles.navbarButtonText}>
+            Accesibility Options
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
 };
-
 export default Navbar;

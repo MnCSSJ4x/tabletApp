@@ -1,6 +1,6 @@
 import {Dimensions, StyleSheet, Text, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import Navbar from '../Components/Navbar';
+import Navbar from '../../../Navbar';
 import PatientInfo from './Components/PatientInfo';
 import Updates from './Components/Updates';
 import MainArea from './Components/MainArea';
