@@ -12,7 +12,7 @@ const GET_EMR_BY_EMRID: string = BASE_EMR_URL+'emr/getEmrByEmrIdText/'
 const PUT_EMR_BY_PATIENT_ID: string = BASE_EMR_URL+'emr/updateEmrByIdText/'
 const GET_EMRID_BY_PATIENT_DOCTOR_ID: string = BASE_EMR_URL+'consultation/getEmrIdByPatientIdAndDoctorId'
 const UPDATE_EMR_BY_EMR_ID: string = BASE_EMR_URL+'emr/updateEmrByIdText'
-
+const LOGOUT: string = BASE_AUTH_URL + 'api/v1/auth/logout'
 
 export  {BASE_AUTH_URL, 
     BASE_URL,
@@ -26,4 +26,5 @@ export  {BASE_AUTH_URL,
     GET_EMR_BY_EMRID,
     PUT_EMR_BY_PATIENT_ID,
     GET_EMRID_BY_PATIENT_DOCTOR_ID,
-    UPDATE_EMR_BY_EMR_ID} 
+    UPDATE_EMR_BY_EMR_ID,
+    LOGOUT} 

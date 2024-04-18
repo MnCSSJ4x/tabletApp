@@ -71,12 +71,6 @@ const getRoleBasedCards = (role: Role): Card[] => {
           description: 'Click to enter outdoor mode.',
           route: '/doctor/outdoorMode',
         },
-        {
-          title: 'Out of Office Mode',
-          clipart: '🏡',
-          description: 'Click to enter out of office mode.',
-          route: '/doctor/outOfOfficeMode',
-        },
       ];
     default:
       return [];
