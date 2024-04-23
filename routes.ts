@@ -1,6 +1,12 @@
-const BASE_AUTH_URL: string = 'http://172.16.129.240:8084/';
-const BASE_URL: string = 'http://172.16.129.240:8082/'; 
-const BASE_EMR_URL: string = 'http://172.16.129.240:8083/';
+// const BASE_AUTH_URL: string = 'http://172.16.129.240:8084/';
+const BASE_AUTH_URL: string = 'https://1nf0cc0n-8084.inc1.devtunnels.ms/'
+// const BASE_URL: string = 'http://172.16.129.240:8082/'; 
+const BASE_URL: string = 'https://1nf0cc0n-8082.inc1.devtunnels.ms/'
+
+const BASE_EMR_URL: string =  'https://1nf0cc0n-8083.inc1.devtunnels.ms/'
+// const BASE_EMR_URL: string = 'http://172.16.129.240:8083/';
+
+
 const LOGIN: string = BASE_AUTH_URL + 'api/v1/auth/authenticate'
 const GET_ALL_INPATIENTS: string = BASE_URL + 'patient/allInpatients'
 const GET_ALL_NURSES: string = BASE_URL + 'employee/getAllNurses'
