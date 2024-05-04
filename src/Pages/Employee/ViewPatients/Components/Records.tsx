@@ -12,7 +12,7 @@ import colors from '../../../../../colors';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import PatientDetails from './PatientDetails';
 import Patient from './Patient';
-import {useRecoilValue} from 'recoil';
+import {constSelector, useRecoilValue} from 'recoil';
 import {authState} from '../../../../Auth/atom';
 import axios from 'axios';
 import {
@@ -24,8 +24,36 @@ interface RecordsProps {
   role: string;
 }
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+function calculateAge(dobStr: string): number {
+  // Parse the DOB string to extract day, month, and year
+  const parts: string[] = dobStr.split('/');
+  const day: number = parseInt(parts[0]);
+  const month: number = parseInt(parts[1]) - 1; // Month is zero-based
+  const year: number = parseInt(parts[2]);
+
+  // Create a Date object from the components
+  const dob: Date = new Date(year, month, day);
+
+  // Get the current date
+  const currentDate: Date = new Date();
+
+  // Calculate the difference between current date and DOB
+  let age: number = currentDate.getFullYear() - dob.getFullYear();
+  const monthDiff: number = currentDate.getMonth() - dob.getMonth();
+
+  // Adjust age if birth month has not been reached yet in current year
+  if (
+    monthDiff < 0 ||
+    (monthDiff === 0 && currentDate.getDate() < dob.getDate())
+  ) {
+    age--;
+  }
+
+  return age;
+}
 const Records: React.FC<RecordsProps> = ({role}) => {
-  console.log(role);
+  // console.log(role);
   const navigation = useNavigation();
   const [isPatientViewOpen, setPatientDetails] = useState(false);
   const [isPatientEditOpen, setPatientEdit] = useState(false);
@@ -37,7 +65,7 @@ const Records: React.FC<RecordsProps> = ({role}) => {
   let auth = useRecoilValue(authState);
   const route = useRoute();
   const mode = useRoute().name.split('/')[2];
-  console.log(mode);
+  // console.log(mode);
 
   const uname = auth.user_id;
   let query_string = '';
@@ -96,7 +124,7 @@ const Records: React.FC<RecordsProps> = ({role}) => {
   const handleAttend = (record: Patient) => {
     navigate.navigate(route.name + '/attend', {record});
   };
-  console.log(filteredRecords);
+  console.log('FILETERED RECORDS', filteredRecords);
   return (
     <View style={styles.container}>
       <TextInput
@@ -111,13 +139,23 @@ const Records: React.FC<RecordsProps> = ({role}) => {
             <View key={record.id} style={styles.recordContainer}>
               <Text style={styles.recordTitle}>{record.name}</Text>
               <View style={styles.recordDetails}>
-                <Text style={{color: colors.text02}}>Age: {record.age}</Text>
+                <Text style={{color: colors.text02}}>
+                  Age: {calculateAge(record.dateOfBirth)}
+                </Text>
                 <Text style={{color: colors.text02}}>
                   Gender: {record.gender}
                 </Text>
-                <Text style={{color: colors.text02}}>
-                  Severity: {record.age}
-                </Text>
+                <View style={{flexDirection: 'row'}}>
+                  <Text style={{color: colors.text02}}>Severity: </Text>
+
+                  {record.severity === 'LOW' ? (
+                    <Text style={{color: colors.support02}}>LOW</Text>
+                  ) : record.severity === 'MEDIUM' ? (
+                    <Text style={{color: colors.support03}}>MEDIUM</Text>
+                  ) : (
+                    <Text style={{color: colors.danger01}}>HIGH</Text>
+                  )}
+                </View>
               </View>
               <View style={styles.buttonContainer}>
                 <TouchableOpacity

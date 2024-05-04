@@ -1,9 +1,10 @@
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import colors from '../../../../../../colors';
+import colors from '../../../../../../../../colors';
 import UnorderedList from 'react-native-unordered-list';
 
 const Updates = ({data}) => {
+  //   console.log(data[0]);
   return (
     <ScrollView
       style={styles.container}
@@ -17,11 +18,6 @@ const Updates = ({data}) => {
         }}>
         Updates
       </Text>
-      {data[0].map((item, index) => (
-        <Text key={index}>
-          •{item.eventDate + ':' + item.actorId + ' ' + item.msg}
-        </Text>
-      ))}
     </ScrollView>
   );
 };

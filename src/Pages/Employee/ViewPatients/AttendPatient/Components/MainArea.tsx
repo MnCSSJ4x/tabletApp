@@ -2,43 +2,30 @@ import React, {useState} from 'react';
 import {
   View,
   Text,
-  TextInput,
-  Button,
   StyleSheet,
   TouchableOpacity,
   Modal,
+  ScrollView,
+  Dimensions,
 } from 'react-native';
 import colors from '../../../../../../colors';
-import {useRecoilValue} from 'recoil';
-import {authState} from '../../../../../Auth/atom';
 import axios from 'axios';
 import {UPDATE_EMR_BY_EMR_ID} from '../../../../../../routes';
-import VoiceToText from './VoiceToText';
-import Patient from '../../Components/Patient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Workspace from './Workspace/Workspace';
+import Svg, {Path} from 'react-native-svg';
 
 const EditableInput = ({title, initialValue, onSave}) => {
-  const [value, setValue] = useState(initialValue);
   const [modalVisible, setModalVisible] = useState(false);
-  console.log(title);
-  const handleSave = () => {
-    onSave(value);
-    setModalVisible(false);
-  };
-
   return (
     <View style={styles.inputContainer}>
       <Text style={styles.title}>{title}</Text>
-      <Text style={styles.input}>{value}</Text>
-      <View style={{flex: 0.4, flexDirection: 'row', gap: 40}}>
-        <TouchableOpacity
-          style={styles.buttonContainer}
-          onPress={() => {
-            setModalVisible(true);
-          }}>
-          <Text style={styles.buttonText}>Edit</Text>
-        </TouchableOpacity>
+      <View style={{flex: 2.8, borderColor: colors.ui03, borderWidth: 2}}>
+        {/* <Svg
+          style={{width: screenWidth, height: screenHeight}}
+          viewBox="0 0 200 320">
+          <Path d={value} fill="black" strokeWidth={2}></Path>
+        </Svg> */}
       </View>
       <Modal
         animationType="slide"
@@ -48,21 +35,35 @@ const EditableInput = ({title, initialValue, onSave}) => {
           setModalVisible(false);
         }}>
         <View style={styles.modalContainer}>
-          {/* Placeholder for your modal component */}
-          {/* Replace 'YourModalComponent' with your actual modal component */}
-          <Workspace title={title} closeButton={setModalVisible}></Workspace>
+          <Workspace
+            title={title}
+            closeButton={setModalVisible}
+            onSave={onSave}></Workspace>
         </View>
       </Modal>
+      <View style={{flex: 0.2}}>
+        <View style={{flexDirection: 'row', gap: 10}}>
+          <TouchableOpacity
+            style={styles.buttonContainer}
+            onPress={() => {
+              setModalVisible(true);
+            }}>
+            <Text style={styles.buttonText}>Edit</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
   );
 };
 
 const MainArea = ({info, emrId, record}) => {
+  // console.log('SVG STRING ', svgString);
   const [input1, setInput1] = useState(record['Prescriptions']);
   const [input2, setInput2] = useState(record['Tests']);
   const [input3, setInput3] = useState(record['Comments']);
 
   const handleSave = async () => {
+    console.log(input1);
     const token = await AsyncStorage.getItem('token');
     const url = UPDATE_EMR_BY_EMR_ID;
     const formDataToSend = new FormData();
@@ -132,7 +133,9 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     flex: 3,
-    marginBottom: 20,
+    padding: 10,
+    marginBottom: 2,
+    gap: 20,
   },
   title: {
     fontSize: 18,
@@ -159,6 +162,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: colors.ui02,
     fontWeight: 'bold',
+    padding: 2,
   },
   saveButton: {
     alignItems: 'center',

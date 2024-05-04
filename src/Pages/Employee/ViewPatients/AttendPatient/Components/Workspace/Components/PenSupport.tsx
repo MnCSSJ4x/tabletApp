@@ -4,7 +4,7 @@ import axios from 'axios';
 import React, {useState} from 'react';
 import colors from '../../../../../../../../colors';
 
-const DrawingBoard = ({onConfirm, closeButton}) => {
+const DrawingBoard = ({onConfirm, closeButton, onSave}) => {
   const [paths, setPaths] = useState([]);
   const [currentPath, setCurrentPath] = useState('');
   const [isDrawing, setIsDrawing] = useState(true); // Start with drawing mode
@@ -49,16 +49,8 @@ const DrawingBoard = ({onConfirm, closeButton}) => {
   const toggleDrawingMode = () => {
     setIsDrawing(prevMode => !prevMode);
   };
-
-  const sendDataToBackend = async () => {
-    try {
-      // Make an API call to send the drawing data to the backend
-      await axios.post('YOUR_BACKEND_API_ENDPOINT', {paths});
-      alert('Drawing data sent successfully!');
-    } catch (error) {
-      console.error('Error sending drawing data:', error);
-      alert('Failed to send drawing data. Please try again.');
-    }
+  const saveDrawing = () => {
+    onSave(paths);
   };
   const closeButtonCall = () => {
     // Display the alert when the Close button is pressed
@@ -115,7 +107,7 @@ const DrawingBoard = ({onConfirm, closeButton}) => {
         <TouchableOpacity style={styles.button} onPress={clearDrawing}>
           <Text style={styles.buttonText}>Clear</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={sendDataToBackend}>
+        <TouchableOpacity style={styles.button} onPress={saveDrawing}>
           <Text style={styles.buttonText}>Save Drawing</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={closeButtonCall}>

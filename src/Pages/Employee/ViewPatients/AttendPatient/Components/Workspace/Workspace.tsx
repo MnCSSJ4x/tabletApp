@@ -1,7 +1,7 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import PenSupport from './Components/PenSupport';
-import Updates from '../Updates';
+import Updates from './Components/Updates';
 import Title from '../../../Components/Title';
 
 const Workspace = props => {
@@ -18,7 +18,9 @@ const Workspace = props => {
       <Title title={title}></Title>
       <View style={{flex: 1, flexDirection: 'row'}}>
         <View style={{flex: 0.7}}>
-          <PenSupport closeButton={props.closeButton}></PenSupport>
+          <PenSupport
+            closeButton={props.closeButton}
+            onSave={props.onSave}></PenSupport>
         </View>
         <View style={{flex: 0.3}}>
           <Updates></Updates>

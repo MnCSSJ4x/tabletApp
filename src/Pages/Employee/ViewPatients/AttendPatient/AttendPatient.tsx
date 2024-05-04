@@ -14,7 +14,6 @@ import axios from 'axios';
 import {
   GET_EMRID_BY_PATIENT_DOCTOR_ID,
   GET_EMR_BY_EMRID,
-  GET_LOGS_BY_ACTOR_ID,
   GET_LOGS_BY_ACTOR_ID_AND_USER_ID,
 } from '../../../../../routes';
 
@@ -136,7 +135,7 @@ const AttendPatient: React.FC = ({route}) => {
             )}
           </View>
           <View style={styles.rectangle2}>
-            <Updates type="MainPage" data={[logs]} />
+            <Updates data={[logs]} />
           </View>
         </View>
       </View>
