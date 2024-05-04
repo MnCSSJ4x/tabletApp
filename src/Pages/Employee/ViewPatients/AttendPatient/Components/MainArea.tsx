@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   Button,
   StyleSheet,
   TouchableOpacity,
+  Modal,
 } from 'react-native';
 import colors from '../../../../../../colors';
 import {useRecoilValue} from 'recoil';
@@ -15,66 +16,55 @@ import {UPDATE_EMR_BY_EMR_ID} from '../../../../../../routes';
 import VoiceToText from './VoiceToText';
 import Patient from '../../Components/Patient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Workspace from './Workspace/Workspace';
+
 const EditableInput = ({title, initialValue, onSave}) => {
   const [value, setValue] = useState(initialValue);
-  console.log(value);
-  const [isEditing, setIsEditing] = useState(false);
-
+  const [modalVisible, setModalVisible] = useState(false);
+  console.log(title);
   const handleSave = () => {
     onSave(value);
+    setModalVisible(false);
   };
 
   return (
     <View style={styles.inputContainer}>
       <Text style={styles.title}>{title}</Text>
-      {isEditing ? (
-        <TextInput
-          style={styles.input}
-          value={value}
-          onChangeText={setValue}
-          multiline={true}
-        />
-      ) : (
-        <Text style={styles.input}>{value}</Text>
-      )}
+      <Text style={styles.input}>{value}</Text>
       <View style={{flex: 0.4, flexDirection: 'row', gap: 40}}>
         <TouchableOpacity
           style={styles.buttonContainer}
           onPress={() => {
-            setIsEditing(!isEditing);
-            handleSave();
+            setModalVisible(true);
           }}>
-          <Text style={styles.buttonText}>
-            {isEditing ? 'Confirm' : 'Edit'}
-          </Text>
+          <Text style={styles.buttonText}>Edit</Text>
         </TouchableOpacity>
-        {isEditing ? <VoiceToText setText={setValue}></VoiceToText> : <></>}
       </View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(false);
+        }}>
+        <View style={styles.modalContainer}>
+          {/* Placeholder for your modal component */}
+          {/* Replace 'YourModalComponent' with your actual modal component */}
+          <Workspace title={title} closeButton={setModalVisible}></Workspace>
+        </View>
+      </Modal>
     </View>
   );
 };
-interface PatientProps {
-  info: Patient;
-  emrId: string;
-  record: any;
-}
-const MainArea: React.FC<PatientProps> = ({info, emrId, record}) => {
-  console.log('Record:', record);
-  //input1: Prescription, input2: Test(s) if needed, input3: Doctor's Comments
+
+const MainArea = ({info, emrId, record}) => {
   const [input1, setInput1] = useState(record['Prescriptions']);
   const [input2, setInput2] = useState(record['Tests']);
   const [input3, setInput3] = useState(record['Comments']);
-  const auth = useRecoilValue(authState);
-  console.log('Input 1:', input1);
-  console.log('Input 2:', input2);
-  console.log('Input 3:', input3);
+
   const handleSave = async () => {
     const token = await AsyncStorage.getItem('token');
     const url = UPDATE_EMR_BY_EMR_ID;
-    // console.log('Input 1:', input1);
-    // console.log('Input 2:', input2);
-    // console.log('Input 3:', input3);
-    // console.log('EMRID:', emrId);
     const formDataToSend = new FormData();
     formDataToSend.append('publicEmrId', emrId);
     formDataToSend.append('patientId', info.patientId);
@@ -96,7 +86,6 @@ const MainArea: React.FC<PatientProps> = ({info, emrId, record}) => {
       .catch(error => {
         console.error(error);
       });
-    // Replace the console logs with actual API calls
   };
 
   return (
@@ -109,7 +98,6 @@ const MainArea: React.FC<PatientProps> = ({info, emrId, record}) => {
             onSave={setInput1}
           />
         </View>
-
         <View style={{flex: 3}}>
           <EditableInput
             title="Test(s) if needed"
@@ -125,19 +113,8 @@ const MainArea: React.FC<PatientProps> = ({info, emrId, record}) => {
           />
         </View>
       </View>
-      <View
-        style={{
-          flex: 1,
-        }}>
-        <TouchableOpacity
-          style={{
-            alignItems: 'center',
-            backgroundColor: colors.interactive01,
-            borderRadius: 8,
-            paddingVertical: 10,
-            marginHorizontal: 400,
-          }}
-          onPress={handleSave}>
+      <View style={{flex: 1}}>
+        <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
           <Text style={styles.buttonText}>Finalising Changes</Text>
         </TouchableOpacity>
       </View>
@@ -178,11 +155,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: colors.interactive01,
     borderRadius: 8,
-    // marginRight: 200,
   },
   buttonText: {
     color: colors.ui02,
     fontWeight: 'bold',
+  },
+  saveButton: {
+    alignItems: 'center',
+    backgroundColor: colors.interactive01,
+    borderRadius: 8,
+    paddingVertical: 10,
+    marginHorizontal: 400,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.ui03,
   },
 });
 

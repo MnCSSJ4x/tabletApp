@@ -15,6 +15,7 @@ import AttendPatient from './src/Pages/Employee/ViewPatients/AttendPatient/Atten
 import EmployeeViewPatients from './src/Pages/Employee/ViewPatients/EmployeeViewPatients';
 import EmployeeViewNurses from './src/Pages/Employee/ViewNurses/EmployeeViewNurses';
 import EmployeeViewDoctors from './src/Pages/Employee/ViewDoctors/EmployeeViewDoctors';
+import ViewActivity from './src/Pages/ShiftManager/Pages/ViewActivity/ViewActivity';
 
 const Stack = createStackNavigator();
 const App = () => {
@@ -55,6 +56,11 @@ const App = () => {
           <Stack.Screen
             name="/shift-manager/viewNurses/giveAccess"
             component={GiveAccess}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="/shift-manager/viewActivityLogs"
+            component={ViewActivity}
             options={{headerShown: false}}
           />
           <Stack.Screen

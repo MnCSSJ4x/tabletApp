@@ -53,7 +53,7 @@ const Records: React.FC<RecordsProps> = ({role}) => {
     const fetchPatients = async () => {
       try {
         const token = await AsyncStorage.getItem('token');
-  
+
         const response = await axios.get(query_string, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -96,7 +96,7 @@ const Records: React.FC<RecordsProps> = ({role}) => {
   const handleAttend = (record: Patient) => {
     navigate.navigate(route.name + '/attend', {record});
   };
-
+  console.log(filteredRecords);
   return (
     <View style={styles.container}>
       <TextInput
@@ -114,6 +114,9 @@ const Records: React.FC<RecordsProps> = ({role}) => {
                 <Text style={{color: colors.text02}}>Age: {record.age}</Text>
                 <Text style={{color: colors.text02}}>
                   Gender: {record.gender}
+                </Text>
+                <Text style={{color: colors.text02}}>
+                  Severity: {record.age}
                 </Text>
               </View>
               <View style={styles.buttonContainer}>

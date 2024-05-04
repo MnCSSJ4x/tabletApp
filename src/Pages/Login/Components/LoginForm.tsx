@@ -34,12 +34,12 @@ const LoginForm = () => {
         uuid: username,
         password: password,
       });
-      
+
       if (response.status === 200) {
         const {token} = response.data;
         const user_id: string = username;
         await AsyncStorage.setItem('token', token);
-        setAuth({user_id});
+
         try {
           // console.log(GET_EMPLOYEE_BY_ID + user_id);
           // console.log('token: ', token);
@@ -49,6 +49,8 @@ const LoginForm = () => {
             },
           });
           if (response2.status === 200) {
+            console.log(response2.data['name']);
+            setAuth({user_id, name: response2.data['name']});
             // console.log(response.data);
             navigation.navigate('Home', {type: response2.data['employeeType']});
           }

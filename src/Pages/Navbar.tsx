@@ -11,7 +11,7 @@ import {useNavigation} from '@react-navigation/native';
 
 const Navbar: React.FC = () => {
   const auth = useRecoilValue(authState);
-  const name = auth.user_id;
+  const name = auth.name;
   const navigate = useNavigation();
   const handleLogout = async () => {
     Alert.alert(
