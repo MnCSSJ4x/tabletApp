@@ -3,13 +3,14 @@ import React from 'react';
 import Title from '../../Components/Title';
 import colors from '../../../../../../colors';
 import Patient from '../../Components/Patient';
+import {calculateAge} from '../../Components/calculateAge';
 
 interface PatientProps {
   info: Patient;
 }
 
 const PatientInfo: React.FC<PatientProps> = ({info}) => {
-  let titleString = 'Patient ID: ' + info.patientId;
+  let titleString = 'Patient Name : ' + info.name;
   // console.log(titleString);
   return (
     <View>
@@ -20,9 +21,38 @@ const PatientInfo: React.FC<PatientProps> = ({info}) => {
         <View style={styles.textContainer}>
           <Text
             style={{color: colors.text01, fontWeight: 'bold', fontSize: 16}}>
-            Patient Name:{' '}
+            Patient ID:{' '}
           </Text>
-          <Text style={{color: colors.text01}}>{info.name}</Text>
+          <Text style={{color: colors.text01, fontSize: 16}}>
+            {info.patientId}
+          </Text>
+        </View>
+        <View style={styles.textContainer}>
+          <Text
+            style={{color: colors.text01, fontWeight: 'bold', fontSize: 16}}>
+            Severity:{' '}
+          </Text>
+          <Text style={{color: colors.text01, fontSize: 16}}>
+            {info.severity}
+          </Text>
+        </View>
+        <View style={styles.textContainer}>
+          <Text
+            style={{color: colors.text01, fontWeight: 'bold', fontSize: 16}}>
+            Age:{' '}
+          </Text>
+          <Text style={{color: colors.text01, fontSize: 16}}>
+            {calculateAge(info.dateOfBirth)}
+          </Text>
+        </View>
+        <View style={styles.textContainer}>
+          <Text
+            style={{color: colors.text01, fontWeight: 'bold', fontSize: 16}}>
+            Gender:{' '}
+          </Text>
+          <Text style={{color: colors.text01, fontSize: 16}}>
+            {info.gender}
+          </Text>
         </View>
 
         <View style={styles.textContainer}></View>

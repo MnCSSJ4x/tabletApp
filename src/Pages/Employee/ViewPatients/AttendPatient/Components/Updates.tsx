@@ -4,6 +4,12 @@ import colors from '../../../../../../colors';
 import UnorderedList from 'react-native-unordered-list';
 
 const Updates = ({data}) => {
+  // Function to format timestamp
+  const formatTimestamp = timestamp => {
+    const date = new Date(timestamp);
+    return date.toLocaleString(); // You can adjust the format as needed
+  };
+
   return (
     <ScrollView
       style={styles.container}
@@ -19,7 +25,7 @@ const Updates = ({data}) => {
       </Text>
       {data[0].map((item, index) => (
         <Text key={index}>
-          •{item.eventDate + ':' + item.actorId + ' ' + item.msg}
+          • {formatTimestamp(item.eventDate)}: {item.actorId} {item.msg}
         </Text>
       ))}
     </ScrollView>

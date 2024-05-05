@@ -57,8 +57,25 @@ const DrawingBoard = ({onConfirm, closeButton, onSave}) => {
     setIsDrawing(prevMode => !prevMode);
   };
   const saveDrawing = () => {
-    onSave(paths);
+    Alert.alert(
+      'Save Drawing',
+      'Do you want to save your drawing?',
+      [
+        {
+          text: 'No',
+          style: 'cancel',
+        },
+        {
+          text: 'Yes',
+          onPress: () => {
+            onSave(paths);
+          },
+        },
+      ],
+      {cancelable: false},
+    );
   };
+
   const closeButtonCall = () => {
     // Display the alert when the Close button is pressed
     Alert.alert(

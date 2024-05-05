@@ -47,7 +47,7 @@ const EditableInput: React.FC<Props> = ({
   };
   return (
     <View style={styles.inputContainer}>
-      <Text style={styles.title}>{title}</Text>
+      {/* <Text style={styles.title}>{title}</Text> */}
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}>
@@ -187,7 +187,7 @@ const MainArea = ({info, emrId, record, save}) => {
       <TabView
         navigationState={{index, routes}}
         renderScene={renderScene}
-        onIndexChange={setIndex} // Handle tab change
+        onIndexChange={setIndex}
         initialLayout={{width: Dimensions.get('window').width}}
         renderTabBar={props => (
           <TabBar
@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '100%',
-    height: 200,
+    height: 275,
     resizeMode: 'contain',
     borderColor: colors.ui03,
     borderWidth: 2,
@@ -256,7 +256,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.interactive01,
     borderRadius: 8,
     paddingVertical: 10,
-    marginHorizontal: 20,
+    marginHorizontal: 400,
     marginBottom: 20,
   },
   imageModalContainer: {

@@ -60,13 +60,13 @@ const Navbar: React.FC = () => {
           style={globalStyles.navbarButton}>
           <Text style={globalStyles.navbarButtonText}>Logout</Text>
         </TouchableOpacity>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={handleLogout}
           style={globalStyles.navbarButton}>
           <Text style={globalStyles.navbarButtonText}>
             Accesibility Options
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </View>
   );
