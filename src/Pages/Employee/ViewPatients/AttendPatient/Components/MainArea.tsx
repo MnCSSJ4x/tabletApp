@@ -8,6 +8,8 @@ import {
   Modal,
   Dimensions,
   StyleSheet,
+  TouchableWithoutFeedback,
+  SafeAreaView,
 } from 'react-native';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import colors from '../../../../../../colors';
@@ -35,7 +37,14 @@ const EditableInput: React.FC<Props> = ({
   data,
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [imageModalVisible, setImageModalVisible] = useState(false);
+  const [selectedImage, setSelectedImage] = useState('');
 
+  // Function to handle click on image
+  const handleImageClick = (imageUri: string) => {
+    setSelectedImage(imageUri);
+    setImageModalVisible(true);
+  };
   return (
     <View style={styles.inputContainer}>
       <Text style={styles.title}>{title}</Text>
@@ -44,15 +53,39 @@ const EditableInput: React.FC<Props> = ({
         contentContainerStyle={styles.contentContainer}>
         {data &&
           data.map((datapoint: Data, index: number) => (
-            <View key={index}>
-              <Text>{datapoint.timestamp}</Text>
-              <Image
-                source={{uri: `data:image/png;base64,${datapoint.image}`}}
-                style={styles.image}
-              />
-            </View>
+            <TouchableWithoutFeedback
+              key={index}
+              onPress={() => handleImageClick(datapoint.image)}>
+              <View>
+                <Text>{datapoint.timestamp}</Text>
+                <Image
+                  source={{uri: `data:image/png;base64,${datapoint.image}`}}
+                  style={styles.image}
+                />
+              </View>
+            </TouchableWithoutFeedback>
           ))}
       </ScrollView>
+      <Modal
+        animationType="fade"
+        transparent={false}
+        visible={imageModalVisible}
+        onRequestClose={() => setImageModalVisible(false)}>
+        <SafeAreaView style={styles.imageModalContainer}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => setImageModalVisible(false)}>
+            <Text style={styles.backButtonText}>Back</Text>
+          </TouchableOpacity>
+          <View style={styles.imageContainer}>
+            <Image
+              source={{uri: `data:image/png;base64,${selectedImage}`}}
+              style={styles.fullScreenImage}
+              resizeMode="contain"
+            />
+          </View>
+        </SafeAreaView>
+      </Modal>
       <Modal
         animationType="slide"
         transparent={true}
@@ -225,6 +258,31 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     marginHorizontal: 20,
     marginBottom: 20,
+  },
+  imageModalContainer: {
+    flex: 1,
+    backgroundColor: colors.ui02,
+  },
+  backButton: {
+    position: 'absolute',
+    top: 20,
+    left: 20,
+    zIndex: 1,
+    padding: 10,
+    backgroundColor: colors.interactive01,
+  },
+  backButtonText: {
+    color: colors.text04,
+    fontWeight: 'bold',
+  },
+  imageContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  fullScreenImage: {
+    width: Dimensions.get('window').width - 250,
+    height: Dimensions.get('window').height - 250,
   },
 });
 
