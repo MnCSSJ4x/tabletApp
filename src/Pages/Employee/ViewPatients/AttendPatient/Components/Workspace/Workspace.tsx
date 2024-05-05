@@ -1,8 +1,9 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import PenSupport from './Components/PenSupport';
-import Updates from './Components/Updates';
+import Updates from './Components/MultiModal';
 import Title from '../../../Components/Title';
+import MultiModal from './Components/MultiModal';
 
 const Workspace = props => {
   let title = 'Editing ' + props.title;
@@ -17,10 +18,13 @@ const Workspace = props => {
       }}>
       <Title title={title}></Title>
       <View style={{flex: 1, flexDirection: 'row'}}>
-        <View style={{flex: 1}}>
+        <View style={{flex: 0.7}}>
           <PenSupport
             closeButton={props.closeButton}
             onSave={props.onSave}></PenSupport>
+        </View>
+        <View style={{flex: 0.3}}>
+          <MultiModal></MultiModal>
         </View>
       </View>
     </View>
