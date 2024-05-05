@@ -1,4 +1,11 @@
-import {View, TouchableOpacity, Text, StyleSheet, Alert} from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  Alert,
+  Dimensions,
+} from 'react-native';
 import Svg, {Path} from 'react-native-svg';
 import axios from 'axios';
 import React, {useState} from 'react';
@@ -74,31 +81,29 @@ const DrawingBoard = ({onConfirm, closeButton, onSave}) => {
   };
   return (
     <View style={styles.container}>
-      <View style={StyleSheet.absoluteFill}>
-        <Svg style={StyleSheet.absoluteFill}>
-          {paths.map((path, index) => (
-            <Path
-              key={index}
-              d={path}
-              stroke="black"
-              strokeWidth={2}
-              fill="none"
-            />
-          ))}
+      <Svg style={styles.svgContainer}>
+        {paths.map((path, index) => (
           <Path
-            key="currentPath"
-            d={currentPath}
+            key={index}
+            d={path}
             stroke="black"
-            strokeWidth={2}
+            strokeWidth={`${Dimensions.get('window').width * 0.01}`} // Example: set stroke width as 1% of window width
             fill="none"
           />
-        </Svg>
-      </View>
+        ))}
+        <Path
+          key="currentPath"
+          d={currentPath}
+          stroke="black"
+          strokeWidth={`${Dimensions.get('window').width * 0.01}`} // Example: set stroke width as 1% of window width
+          fill="none"
+        />
+      </Svg>
       <View
         onTouchStart={handleStartTouch}
         onTouchMove={handleMoveTouch}
         onTouchEnd={handleEndTouch}
-        style={StyleSheet.absoluteFill}
+        style={styles.touchOverlay}
       />
       <View style={styles.buttonsContainer}>
         <TouchableOpacity style={styles.button} onPress={toggleDrawingMode}>
@@ -122,6 +127,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+  },
+  svgContainer: {
+    flex: 1,
+  },
+  touchOverlay: {
+    ...StyleSheet.absoluteFill,
   },
   buttonsContainer: {
     position: 'absolute',

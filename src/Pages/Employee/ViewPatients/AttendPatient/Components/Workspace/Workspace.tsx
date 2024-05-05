@@ -17,13 +17,10 @@ const Workspace = props => {
       }}>
       <Title title={title}></Title>
       <View style={{flex: 1, flexDirection: 'row'}}>
-        <View style={{flex: 0.7}}>
+        <View style={{flex: 1}}>
           <PenSupport
             closeButton={props.closeButton}
             onSave={props.onSave}></PenSupport>
-        </View>
-        <View style={{flex: 0.3}}>
-          <Updates></Updates>
         </View>
       </View>
     </View>

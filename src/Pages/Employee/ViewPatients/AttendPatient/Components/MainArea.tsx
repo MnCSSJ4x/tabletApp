@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   Modal,
   ScrollView,
   Dimensions,
+  Image,
 } from 'react-native';
 import colors from '../../../../../../colors';
 import axios from 'axios';
@@ -14,18 +15,65 @@ import {UPDATE_EMR_BY_EMR_ID} from '../../../../../../routes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Workspace from './Workspace/Workspace';
 import Svg, {Path} from 'react-native-svg';
-
-const EditableInput = ({title, initialValue, onSave}) => {
+interface Props {
+  title: string;
+  initialValue: any;
+  onSave: any;
+  data: Data;
+}
+interface Data {
+  image: string;
+  timestamp: string;
+}
+const EditableInput: React.FC<Props> = ({
+  title,
+  initialValue,
+  onSave,
+  data,
+}) => {
+  if (data !== undefined) {
+    // console.log(data);
+  }
+  // let imgArr = data.image;
+  // console.log('IMG_ARR', imgArr);
   const [modalVisible, setModalVisible] = useState(false);
   return (
     <View style={styles.inputContainer}>
       <Text style={styles.title}>{title}</Text>
-      <View style={{flex: 2.8, borderColor: colors.ui03, borderWidth: 2}}>
-        {/* <Svg
-          style={{width: screenWidth, height: screenHeight}}
-          viewBox="0 0 200 320">
-          <Path d={value} fill="black" strokeWidth={2}></Path>
-        </Svg> */}
+      <View
+        style={{
+          flex: 2.8,
+          borderColor: colors.ui03,
+          borderWidth: 2,
+          gap: 8,
+          padding: 20,
+        }}>
+        {data != undefined && (
+          <>
+            <Text>{data.timestamp}</Text>
+            <Image
+              source={{uri: `data:image/png;base64,${data.image}`}}
+              style={{
+                flex: 1,
+                width: '100%',
+                height: '100%',
+                resizeMode: 'contain',
+                borderColor: colors.ui03,
+                borderWidth: 2,
+                // resizeMode: 'contain',
+              }}
+            />
+          </>
+        )}
+        {/* {data &&
+          data.image !== undefined &&
+          data.image.map((jsonData, index) => (
+            <Image
+              key={index}
+              source={{uri: `data:image/jpeg;base64,${jsonData.image_data}`}}
+              style={{width: 200, height: 200, marginBottom: 10}}
+            />
+          ))} */}
       </View>
       <Modal
         animationType="slide"
@@ -56,36 +104,45 @@ const EditableInput = ({title, initialValue, onSave}) => {
   );
 };
 
-const MainArea = ({info, emrId, record}) => {
-  // console.log('SVG STRING ', svgString);
-  const [input1, setInput1] = useState(record['Prescriptions']);
-  const [input2, setInput2] = useState(record['Tests']);
-  const [input3, setInput3] = useState(record['Comments']);
+const MainArea = ({info, emrId, record, save}) => {
+  // console.log('PRESCRIPTION', record['Prescriptions']);
+  // console.log('TEST', record['Tests']);
+  // console.log('COMMENTS', record['Comments']);
+  // useEffect(() => {});
+  const [input1, setInput1] = useState([]);
+  const [input2, setInput2] = useState([]);
+  const [input3, setInput3] = useState([]);
 
   const handleSave = async () => {
-    console.log(input1);
+    // console.log(input1);
     const token = await AsyncStorage.getItem('token');
     const url = UPDATE_EMR_BY_EMR_ID;
-    const formDataToSend = new FormData();
-    formDataToSend.append('publicEmrId', emrId);
-    formDataToSend.append('patientId', info.patientId);
-    formDataToSend.append('prescription', input1);
-    formDataToSend.append('comments', input3);
-    formDataToSend.append('tests', input2);
-    formDataToSend.append('accessDepartments', '');
-    formDataToSend.append('accessList', '');
+    const headers = {
+      Authorization: `Bearer ${token}`, // Include the authorization token in the headers
+      'Content-Type': 'application/json', // Specify content type as JSON
+    };
+    const data = {
+      publicEmrId: emrId,
+      patientId: info.patientId,
+      prescription: input1,
+      comments: input3,
+      tests: input2,
+      accessDepartments: '',
+      accessList: '',
+    };
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     };
     axios
-      .put(url, formDataToSend, config)
+      .put(url, data, {headers})
       .then(response => {
-        console.log(response);
+        console.log('Pinged backend update emrid');
+        console.log(response.data); // Log the response data if needed
       })
       .catch(error => {
-        console.error(error);
+        console.error('Error making PUT request:', error);
       });
   };
 
@@ -93,17 +150,21 @@ const MainArea = ({info, emrId, record}) => {
     <View style={{flex: 1, flexDirection: 'column'}}>
       <View style={styles.container}>
         <View style={{flex: 3}}>
-          <EditableInput
-            title="Prescription"
-            initialValue={input1}
-            onSave={setInput1}
-          />
+          {record && (
+            <EditableInput
+              title="Prescription"
+              initialValue={input1}
+              onSave={setInput1}
+              data={record ? record['Prescriptions'] : []}
+            />
+          )}
         </View>
         <View style={{flex: 3}}>
           <EditableInput
             title="Test(s) if needed"
             initialValue={input2}
             onSave={setInput2}
+            data={record['Tests']}
           />
         </View>
         <View style={{flex: 3}}>
@@ -111,6 +172,7 @@ const MainArea = ({info, emrId, record}) => {
             title="Doctor's Comments"
             initialValue={input3}
             onSave={setInput3}
+            data={record['Comments']}
           />
         </View>
       </View>

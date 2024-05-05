@@ -8,7 +8,7 @@ import colors from '../../../../../colors';
 import {useRoute} from '@react-navigation/native';
 import Patient from '../Components/Patient';
 import {authState} from '../../../../Auth/atom';
-import {useRecoilValue} from 'recoil';
+import {constSelector, useRecoilValue} from 'recoil';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {
@@ -16,20 +16,24 @@ import {
   GET_EMR_BY_EMRID,
   GET_LOGS_BY_ACTOR_ID_AND_USER_ID,
 } from '../../../../../routes';
+import Records from '../Components/Records';
 
 const {width} = Dimensions.get('window');
 
 const AttendPatient: React.FC = ({route}) => {
   const patientInfo: Patient = route.params['record'];
   const [emrId, setEmrId] = useState(null);
+  const [done, setDone] = useState(false);
   const mode = useRoute().name.split('/')[2];
   const auth = useRecoilValue(authState);
   const [logs, setLogs] = useState([]);
   const [feedback, setFeedback] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [save, setSave] = useState(false);
   const fetchData = async () => {
-    try {
-      const token = await AsyncStorage.getItem('token');
-      const response = await axios.get(GET_EMRID_BY_PATIENT_DOCTOR_ID, {
+    const token = await AsyncStorage.getItem('token');
+    axios
+      .get(GET_EMRID_BY_PATIENT_DOCTOR_ID, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -37,23 +41,14 @@ const AttendPatient: React.FC = ({route}) => {
           patientId: patientInfo.patientId,
           doctorId: auth.user_id,
         },
-      });
-      if (response.status === 200) {
-        console.log('Found emr id');
-        console.log(response.data);
+      })
+      .then(response => {
+        // console.log(response.data);
         setEmrId(response.data);
-      } else if (response.status === 204) {
-        console.log('No emr for id found');
-        setFeedback({});
-      } else {
-        console.error(
-          'Failed to fetch record for patient',
-          response.statusText,
-        );
-      }
-    } catch (error) {
-      console.error('Failed to fetch record for patient', error);
-    }
+      })
+      .catch(error => {
+        console.error('Failed to fetch record for patient', error);
+      });
   };
   const fetchLog = async () => {
     const token = await AsyncStorage.getItem('token');
@@ -69,7 +64,7 @@ const AttendPatient: React.FC = ({route}) => {
         },
       })
       .then(response => {
-        console.log('LOGS', response.data);
+        // console.log('LOGS', response.data);
         setLogs(response.data);
       })
       .catch(error => {
@@ -77,68 +72,86 @@ const AttendPatient: React.FC = ({route}) => {
       });
   };
   const fetchEMR = async () => {
-    try {
-      const token = await AsyncStorage.getItem('token');
-      const response = await axios.get(GET_EMR_BY_EMRID + emrId, {
+    const token = await AsyncStorage.getItem('token');
+    axios
+      .get(GET_EMR_BY_EMRID + emrId, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+      })
+      .then(response => {
+        setFeedback({...response.data});
+      })
+      .catch(error => {
+        console.error('Failed to fetch EMR for EMRID', error);
       });
-      if (response.status === 200) {
-        console.log('SUCCESS for getting emr');
-        setFeedback(response.data);
-      } else if (response.status === 204) {
-        console.log('No emr for id found');
-        setFeedback({});
-      } else {
-        console.error(
-          'Failed to fetch record for patient',
-          response.statusText,
-        );
+  };
+  const runAll = async () => {
+    try {
+      if (emrId !== null) {
+        await fetchLog();
+        await fetchEMR();
+        setLoading(!loading);
       }
     } catch (error) {
-      console.error('Failed to fetch EMR for EMRID', error);
+      console.error('Failed to fetch data', error);
     }
   };
   useEffect(() => {
     fetchData();
   }, []);
-
   useEffect(() => {
-    if (emrId) {
-      fetchEMR();
-    }
+    runAll();
   }, [emrId]);
-  useEffect(() => {
-    fetchLog();
-  }, []);
+  // useEffect(() => {
+  //   console.log(logs);
+  // }, [logs]);
+
+  // useEffect(() => {
+  //   console.log(feedback);
+  // }, [feedback]);
+
   return (
     <View style={{flex: 1, backgroundColor: colors.ui02}}>
       <Navbar />
-      <View
-        style={{
-          paddingHorizontal: 18,
-          marginHorizontal: 40,
-          marginTop: 10,
-          borderWidth: 1,
-          borderColor: '#ccc',
-          borderRadius: 5,
-        }}>
-        <PatientInfo info={patientInfo} />
-      </View>
-
-      <View style={styles.container}>
-        <View style={styles.rectanglesContainer}>
-          <View style={styles.rectangle1}>
-            {Object.keys(feedback).length > 0 && (
-              <MainArea info={patientInfo} emrId={emrId} record={feedback} />
-            )}
-          </View>
-          <View style={styles.rectangle2}>
-            <Updates data={[logs]} />
-          </View>
+      {loading ? (
+        <View>
+          <Text>Loading</Text>
         </View>
-      </View>
+      ) : (
+        <>
+          <View
+            style={{
+              paddingHorizontal: 18,
+              marginHorizontal: 40,
+              marginTop: 10,
+              borderWidth: 1,
+              borderColor: '#ccc',
+              borderRadius: 5,
+            }}>
+            <PatientInfo info={patientInfo} />
+          </View>
+
+          <View style={styles.container}>
+            <View style={styles.rectanglesContainer}>
+              <View style={styles.rectangle1}>
+                {emrId && feedback && (
+                  <MainArea
+                    info={patientInfo}
+                    emrId={emrId}
+                    record={feedback}
+                    save={setSave}
+                  />
+                )}
+              </View>
+
+              <View style={styles.rectangle2}>
+                <Updates data={[logs]} />
+              </View>
+            </View>
+          </View>
+        </>
+      )}
     </View>
   );
 };
