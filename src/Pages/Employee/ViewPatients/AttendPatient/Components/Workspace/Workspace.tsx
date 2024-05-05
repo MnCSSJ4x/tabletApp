@@ -24,7 +24,7 @@ const Workspace = props => {
             onSave={props.onSave}></PenSupport>
         </View>
         <View style={{flex: 0.3}}>
-          <MultiModal></MultiModal>
+          <MultiModal onSaveText={props.onSaveText}></MultiModal>
         </View>
       </View>
     </View>

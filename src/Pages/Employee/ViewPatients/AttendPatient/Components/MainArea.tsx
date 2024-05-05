@@ -17,23 +17,29 @@ import Workspace from './Workspace/Workspace';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {UPDATE_EMR_BY_EMR_ID} from '../../../../../../routes';
+import {formatTimestamp, formatTimestampforTitle} from './formatTimestamp';
 
 interface Props {
   title: string;
   initialValue: any;
   onSave: any;
+  onSaveText: any;
   data: Data[];
 }
 
 interface Data {
   image: string;
   timestamp: string;
+  text: string;
 }
-
+function isWhitespace(str) {
+  return /^\s*$/.test(str);
+}
 const EditableInput: React.FC<Props> = ({
   title,
   initialValue,
   onSave,
+  onSaveText,
   data,
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -45,6 +51,10 @@ const EditableInput: React.FC<Props> = ({
     setSelectedImage(imageUri);
     setImageModalVisible(true);
   };
+  if (data !== undefined) {
+    console.log(data);
+  }
+  // console.log('Data', data);
   return (
     <View style={styles.inputContainer}>
       {/* <Text style={styles.title}>{title}</Text> */}
@@ -52,19 +62,39 @@ const EditableInput: React.FC<Props> = ({
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}>
         {data &&
-          data.map((datapoint: Data, index: number) => (
-            <TouchableWithoutFeedback
-              key={index}
-              onPress={() => handleImageClick(datapoint.image)}>
-              <View>
-                <Text>{datapoint.timestamp}</Text>
-                <Image
-                  source={{uri: `data:image/png;base64,${datapoint.image}`}}
-                  style={styles.image}
-                />
-              </View>
-            </TouchableWithoutFeedback>
-          ))}
+          data.map(
+            (datapoint: Data, index: number) =>
+              (isWhitespace(datapoint.text) != true || datapoint.image) && (
+                <TouchableWithoutFeedback
+                  key={index}
+                  onPress={() => handleImageClick(datapoint.image)}>
+                  <View>
+                    <Text style={{color: colors.text01, fontSize: 16}}>
+                      {formatTimestamp(datapoint.timestamp)}
+                    </Text>
+                    {datapoint.image && (
+                      <Image
+                        source={{
+                          uri: `data:image/png;base64,${datapoint.image}`,
+                        }}
+                        style={styles.image}
+                      />
+                    )}
+                    {datapoint.text && (
+                      <>
+                        <Text
+                          style={{color: colors.text01, fontWeight: 'bold'}}>
+                          Textual Comments
+                        </Text>
+                        <Text style={{color: colors.text01}}>
+                          {datapoint.text}
+                        </Text>
+                      </>
+                    )}
+                  </View>
+                </TouchableWithoutFeedback>
+              ),
+          )}
       </ScrollView>
       <Modal
         animationType="fade"
@@ -97,7 +127,8 @@ const EditableInput: React.FC<Props> = ({
           <Workspace
             title={title}
             closeButton={setModalVisible}
-            onSave={onSave}></Workspace>
+            onSave={onSave}
+            onSaveText={onSaveText}></Workspace>
         </View>
       </Modal>
       <View style={styles.buttonContainer}>
@@ -117,6 +148,9 @@ const MainArea = ({info, emrId, record, save}) => {
   const [input1, setInput1] = useState([]);
   const [input2, setInput2] = useState([]);
   const [input3, setInput3] = useState([]);
+  const [textInput1, setTextInput1] = useState('');
+  const [textInput2, setTextInput2] = useState('');
+  const [textInput3, setTextInput3] = useState('');
   const [index, setIndex] = useState(0);
   const handleTabChange = (newIndex: number) => {
     setIndex(newIndex); // Update the active tab index
@@ -129,6 +163,24 @@ const MainArea = ({info, emrId, record, save}) => {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     };
+    console.log('PrescriptionT', textInput1);
+    console.log('CommentT', textInput2);
+    console.log('presciption', input1);
+    console.log(
+      textInput1.length > 0 || textInput2.length > 0 || textInput3.length > 0,
+    );
+    let isText = 0;
+    if (
+      textInput1.length > 0 ||
+      textInput2.length > 0 ||
+      textInput3.length > 0
+    ) {
+      isText = 1;
+    }
+    let isImage = 0;
+    if (input1.length > 0 || input2.length > 0 || input3.length > 0) {
+      isImage = 1;
+    }
     const data = {
       publicEmrId: emrId,
       patientId: info.patientId,
@@ -137,6 +189,11 @@ const MainArea = ({info, emrId, record, save}) => {
       tests: input2,
       accessDepartments: '',
       accessList: '',
+      prescriptiont: textInput1,
+      commentst: textInput2,
+      testst: textInput3,
+      isText: isText,
+      isImage: isImage,
     };
     axios
       .put(url, data, {headers})
@@ -155,6 +212,7 @@ const MainArea = ({info, emrId, record, save}) => {
         title="Prescription"
         initialValue={input1}
         onSave={setInput1}
+        onSaveText={setTextInput1}
         data={record ? record['Prescriptions'] : []}
       />
     ),
@@ -163,6 +221,7 @@ const MainArea = ({info, emrId, record, save}) => {
         title="Test(s) if needed"
         initialValue={input2}
         onSave={setInput2}
+        onSaveText={setTextInput2}
         data={record ? record['Tests'] : []}
       />
     ),
@@ -171,6 +230,7 @@ const MainArea = ({info, emrId, record, save}) => {
         title="Doctor's Comments"
         initialValue={input3}
         onSave={setInput3}
+        onSaveText={setTextInput3}
         data={record ? record['Comments'] : []}
       />
     ),

@@ -9,7 +9,7 @@ import {
 import VoiceToText from '../../VoiceToText'; // Assuming VoiceToText is in the same directory
 import colors from '../../../../../../../../colors';
 
-const MultiModal = () => {
+const MultiModal = ({onSaveText}) => {
   const [textInput, setTextInput] = useState('');
 
   // Function to handle text input change
@@ -35,6 +35,21 @@ const MultiModal = () => {
       {/* Voice Recorder */}
       <View style={{flex: 0.2}}>
         <VoiceToText setText={setTextFromVoice} />
+        <TouchableOpacity
+          style={{
+            backgroundColor: colors.interactive01,
+            padding: 10,
+            borderRadius: 5,
+            marginTop: 10,
+          }}
+          onPress={() => {
+            setTextInput(textInput);
+            onSaveText(textInput);
+          }}>
+          <Text style={{color: colors.ui02, fontWeight: 'bold'}}>
+            Save Text
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

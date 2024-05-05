@@ -2,13 +2,9 @@ import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import colors from '../../../../../../colors';
 import UnorderedList from 'react-native-unordered-list';
-
+import {formatTimestamp} from './formatTimestamp';
 const Updates = ({data}) => {
   // Function to format timestamp
-  const formatTimestamp = timestamp => {
-    const date = new Date(timestamp);
-    return date.toLocaleString(); // You can adjust the format as needed
-  };
 
   return (
     <ScrollView
