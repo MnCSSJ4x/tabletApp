@@ -19,8 +19,9 @@ interface Props {
   title: string;
   initialValue: any;
   onSave: any;
-  data: Data;
+  data: Data[];
 }
+
 interface Data {
   image: string;
   timestamp: string;
@@ -32,7 +33,7 @@ const EditableInput: React.FC<Props> = ({
   data,
 }) => {
   if (data !== undefined) {
-    // console.log(data);
+    console.log(data);
   }
   // let imgArr = data.image;
   // console.log('IMG_ARR', imgArr);
@@ -40,41 +41,33 @@ const EditableInput: React.FC<Props> = ({
   return (
     <View style={styles.inputContainer}>
       <Text style={styles.title}>{title}</Text>
-      <View
+      <ScrollView
         style={{
           flex: 2.8,
           borderColor: colors.ui03,
           borderWidth: 2,
           gap: 8,
           padding: 20,
-        }}>
-        {data != undefined && (
-          <>
-            <Text>{data.timestamp}</Text>
-            <Image
-              source={{uri: `data:image/png;base64,${data.image}`}}
-              style={{
-                flex: 1,
-                width: '100%',
-                height: '100%',
-                resizeMode: 'contain',
-                borderColor: colors.ui03,
-                borderWidth: 2,
-                // resizeMode: 'contain',
-              }}
-            />
-          </>
-        )}
-        {/* {data &&
-          data.image !== undefined &&
-          data.image.map((jsonData, index) => (
-            <Image
-              key={index}
-              source={{uri: `data:image/jpeg;base64,${jsonData.image_data}`}}
-              style={{width: 200, height: 200, marginBottom: 10}}
-            />
-          ))} */}
-      </View>
+        }}
+        contentContainerStyle={styles.contentContainer}>
+        {data &&
+          data.map((datapoint: Data, index: number) => (
+            <View key={index}>
+              <Text>{datapoint.timestamp}</Text>
+              <Image
+                source={{uri: `data:image/png;base64,${datapoint.image}`}}
+                style={{
+                  flex: 1,
+                  width: '100%',
+                  height: 200, // Adjust the height as needed
+                  resizeMode: 'contain',
+                  borderColor: colors.ui03,
+                  borderWidth: 2,
+                }}
+              />
+            </View>
+          ))}
+      </ScrollView>
       <Modal
         animationType="slide"
         transparent={true}
@@ -195,8 +188,8 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     flex: 3,
-    padding: 10,
-    marginBottom: 2,
+    padding: 0,
+    marginBottom: 0,
     gap: 20,
   },
   title: {
@@ -220,6 +213,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: colors.interactive01,
     borderRadius: 8,
+  },
+  contentContainer: {
+    paddingBottom: 50, // Adjust this value as needed
   },
   buttonText: {
     color: colors.ui02,
