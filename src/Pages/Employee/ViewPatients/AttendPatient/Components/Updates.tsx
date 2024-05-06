@@ -19,11 +19,12 @@ const Updates = ({data}) => {
         }}>
         Updates
       </Text>
-      {data[0].map((item, index) => (
-        <Text key={index}>
-          • {formatTimestamp(item.eventDate)}: {item.actorId} {item.msg}
-        </Text>
-      ))}
+      {data.length !== 0 &&
+        data[0].map((item, index) => (
+          <Text key={index}>
+            • {formatTimestamp(item.eventDate)}: {item.actorId} {item.msg}
+          </Text>
+        ))}
     </ScrollView>
   );
 };

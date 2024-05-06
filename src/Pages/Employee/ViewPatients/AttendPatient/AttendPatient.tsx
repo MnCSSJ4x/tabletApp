@@ -30,6 +30,10 @@ const AttendPatient: React.FC = ({route}) => {
   const [feedback, setFeedback] = useState({});
   const [loading, setLoading] = useState(true);
   const [save, setSave] = useState(false);
+  const [change, setChange] = useState(false);
+  const triggerRender = () => {
+    setChange(!change);
+  };
   const fetchData = async () => {
     const token = await AsyncStorage.getItem('token');
     axios
@@ -64,8 +68,11 @@ const AttendPatient: React.FC = ({route}) => {
         },
       })
       .then(response => {
-        // console.log('LOGS', response.data);
-        setLogs(response.data);
+        let dat = response.data.sort((a, b) => {
+          new Date(a.eventDate) - new Date(b.eventDate);
+        });
+        dat.reverse();
+        setLogs(dat);
       })
       .catch(error => {
         console.error('Fetch Logs: ', error);
@@ -80,6 +87,14 @@ const AttendPatient: React.FC = ({route}) => {
         },
       })
       .then(response => {
+        let dat = response.data;
+        for (let key in dat) {
+          // Sort the array based on the timestamp in descending order
+          dat[key].sort(
+            (a, b) => new Date(a.timestamp) - new Date(b.timestamp),
+          );
+          dat[key].reverse();
+        }
         setFeedback({...response.data});
       })
       .catch(error => {
@@ -91,7 +106,7 @@ const AttendPatient: React.FC = ({route}) => {
       if (emrId !== null) {
         await fetchLog();
         await fetchEMR();
-        setLoading(!loading);
+        setLoading(false);
       }
     } catch (error) {
       console.error('Failed to fetch data', error);
@@ -102,7 +117,7 @@ const AttendPatient: React.FC = ({route}) => {
   }, []);
   useEffect(() => {
     runAll();
-  }, [emrId]);
+  }, [emrId, change]);
   // useEffect(() => {
   //   console.log(logs);
   // }, [logs]);
@@ -141,6 +156,7 @@ const AttendPatient: React.FC = ({route}) => {
                     emrId={emrId}
                     record={feedback}
                     save={setSave}
+                    triggerRender={triggerRender}
                   />
                 )}
               </View>

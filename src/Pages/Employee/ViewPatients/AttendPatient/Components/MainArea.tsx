@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -51,9 +51,15 @@ const EditableInput: React.FC<Props> = ({
     setSelectedImage(imageUri);
     setImageModalVisible(true);
   };
+  let sortedData: Data[] = [];
   if (data !== undefined) {
-    console.log(data);
+    sortedData = data.sort(
+      (a, b) =>
+        new Date(formatTimestamp(b.timestamp)) -
+        new Date(formatTimestamp(a.timestamp)),
+    );
   }
+  // console.log(sortedData);
   // console.log('Data', data);
   return (
     <View style={styles.inputContainer}>
@@ -61,8 +67,8 @@ const EditableInput: React.FC<Props> = ({
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}>
-        {data &&
-          data.map(
+        {sortedData &&
+          sortedData.map(
             (datapoint: Data, index: number) =>
               (isWhitespace(datapoint.text) != true || datapoint.image) && (
                 <TouchableWithoutFeedback
@@ -144,7 +150,7 @@ const EditableInput: React.FC<Props> = ({
   );
 };
 
-const MainArea = ({info, emrId, record, save}) => {
+const MainArea = ({info, emrId, record, save, triggerRender}) => {
   const [input1, setInput1] = useState([]);
   const [input2, setInput2] = useState([]);
   const [input3, setInput3] = useState([]);
@@ -152,6 +158,7 @@ const MainArea = ({info, emrId, record, save}) => {
   const [textInput2, setTextInput2] = useState('');
   const [textInput3, setTextInput3] = useState('');
   const [index, setIndex] = useState(0);
+
   const handleTabChange = (newIndex: number) => {
     setIndex(newIndex); // Update the active tab index
   };
@@ -163,12 +170,7 @@ const MainArea = ({info, emrId, record, save}) => {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     };
-    console.log('PrescriptionT', textInput1);
-    console.log('CommentT', textInput2);
-    console.log('presciption', input1);
-    console.log(
-      textInput1.length > 0 || textInput2.length > 0 || textInput3.length > 0,
-    );
+
     let isText = 0;
     if (
       textInput1.length > 0 ||
@@ -199,7 +201,7 @@ const MainArea = ({info, emrId, record, save}) => {
       .put(url, data, {headers})
       .then(response => {
         console.log('Pinged backend update emrid');
-        console.log(response.data);
+        triggerRender();
       })
       .catch(error => {
         console.error('Error making PUT request:', error);
