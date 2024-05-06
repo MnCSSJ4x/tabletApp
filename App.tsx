@@ -100,10 +100,10 @@ const App = () => {
             initialParams={{role: 'Nurse'}}
           />
           <Stack.Screen
-            name="/nurse/viewPatients/Attend"
+            name="/nurse/viewPatients/attend"
             component={AttendPatient}
             options={{headerShown: false}}
-            initialParams={{role: 'Nurse'}}
+            initialParams={{role: 'Nurse', mode: 'Indoor'}}
           />
           <Stack.Screen
             name="/nurse/viewDoctors"

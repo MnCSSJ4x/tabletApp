@@ -50,12 +50,12 @@ const getRoleBasedCards = (role: Role): Card[] => {
           description: 'Click to view doctors in the assigned ward.',
           route: '/nurse/viewDoctors',
         },
-        {
-          title: 'View Nurses in Ward',
-          clipart: '👩‍⚕️',
-          description: 'Click to view nurses in the ward.',
-          route: '/nurse/viewNurses',
-        },
+        // {
+        //   title: 'View Nurses in Ward',
+        //   clipart: '👩‍⚕️',
+        //   description: 'Click to view nurses in the ward.',
+        //   route: '/nurse/viewNurses',
+        // },
       ];
     case 'PracticingDoctor':
       return [

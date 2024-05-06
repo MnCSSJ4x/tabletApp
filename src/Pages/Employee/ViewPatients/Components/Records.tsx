@@ -19,6 +19,7 @@ import {
   GET_ALL_INPATIENTS,
   GET_INPATIENTS_BY_DOCTOR_ID,
   GET_OUTPATIENTS_BY_DOCTOR_ID,
+  GET_PATIENTS_BY_NURSE_ID,
 } from '../../../../../routes';
 interface RecordsProps {
   role: string;
@@ -42,15 +43,17 @@ const Records: React.FC<RecordsProps> = ({role}) => {
   // console.log(mode);
 
   const uname = auth.user_id;
+  console.log('uname', uname);
   let query_string = '';
   if (role === 'Nurse') {
-    query_string = GET_ALL_INPATIENTS;
+    query_string = GET_PATIENTS_BY_NURSE_ID + uname;
   } else if (role === 'Doctor') {
     query_string =
       (mode === 'indoorMode'
         ? GET_INPATIENTS_BY_DOCTOR_ID
         : GET_OUTPATIENTS_BY_DOCTOR_ID) + uname;
   }
+  console.log('query_string', query_string);
   useEffect(() => {
     const fetchPatients = async () => {
       try {

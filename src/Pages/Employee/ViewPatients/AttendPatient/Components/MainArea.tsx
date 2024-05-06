@@ -53,11 +53,11 @@ const EditableInput: React.FC<Props> = ({
   };
   let sortedData: Data[] = [];
   if (data !== undefined) {
-    sortedData = data.sort(
-      (a, b) =>
-        new Date(formatTimestamp(b.timestamp)) -
-        new Date(formatTimestamp(a.timestamp)),
-    );
+    // sortedData = data.sort(
+    //   (a, b) =>
+    //     new Date(formatTimestamp(b.timestamp)) -
+    //     new Date(formatTimestamp(a.timestamp)),
+    // );
   }
   // console.log(sortedData);
   // console.log('Data', data);
@@ -67,8 +67,8 @@ const EditableInput: React.FC<Props> = ({
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}>
-        {sortedData &&
-          sortedData.map(
+        {data &&
+          data.map(
             (datapoint: Data, index: number) =>
               (isWhitespace(datapoint.text) != true || datapoint.image) && (
                 <TouchableWithoutFeedback

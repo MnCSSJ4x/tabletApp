@@ -26,6 +26,7 @@ const UPDATE_EMR_BY_EMR_ID: string = BASE_EMR_URL + 'emr/updateEmrByIdText'
 const LOGOUT: string = BASE_AUTH_URL + 'api/v1/auth/logout'
 const GET_LOGS_BY_ACTOR_ID_AND_USER_ID: string = BASE_URL+'logs/getLogsByActorandUserId/' 
 const GET_LOGS_BY_DEPARTMENT: string = BASE_URL+'logs/getLogsByDepartment/'
+const GET_PATIENTS_BY_NURSE_ID: string = BASE_URL+ 'patientDepartment/getAllPatientsByNurseID/'
 export {
     BASE_AUTH_URL,
     BASE_URL,
@@ -42,5 +43,6 @@ export {
     UPDATE_EMR_BY_EMR_ID,
     LOGOUT,
     GET_LOGS_BY_ACTOR_ID_AND_USER_ID,
-    GET_LOGS_BY_DEPARTMENT
+    GET_LOGS_BY_DEPARTMENT,
+    GET_PATIENTS_BY_NURSE_ID
 } 
